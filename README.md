@@ -23,3 +23,4 @@ You may also need to run `Unblock-File` against this script
 * Add configuration for PowerToy screen layouts
 * Check requirements before installing items (e.g. Terminal)
 * Add download for non winget installers
+* Configure WSL environment
