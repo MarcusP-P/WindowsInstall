@@ -5,6 +5,9 @@
 # for me: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # You may also need to run Unblock-File against this script
 
+# You will need to install Microsoft App Installer to get winget
+# https://www.microsoft.com/store/productId/9NBLGGH4NNS1
+
 # The buildnumber of this version of Windows
 $WindowsVersion=[long]::Parse((Get-WmiObject Win32_OperatingSystem).BuildNumber)
 
@@ -78,8 +81,8 @@ if ($windowsVersion -ge $windows2004)
 Start-Process "ms-windows-store://pdp/?productId=9NBLGGH4NNS1"
 Read-Host -Prompt "Press Enter once the package is installed"
 
-winget install --exact OpenJS.Nodejs
-winget install --exact Microsoft.VisualStudio.Enterprise
+# winget install --exact OpenJS.Nodejs
+winget install --exact Microsoft.VisualStudio.Enterprise --override "--passive --wait --includeRecommended --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;installOptional --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1"
 winget install --exact Microsoft.VisualStudioCode
 
 # Install 1Password
