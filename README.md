@@ -24,3 +24,5 @@ You may also need to run `Unblock-File` against this script
 * Check requirements before installing items (e.g. Terminal)
 * Add download for non winget installers
 * Configure WSL environment
+* Can we configure Edge from the script?
+* Can we configure Windows?
