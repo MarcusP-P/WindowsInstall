@@ -9,7 +9,7 @@
 
 # Install stuff, and configure stuff
 # You will need to set the execution policy for scripts
-# for me: Get-WmiObject Win32_OperatingSystem
+# for me: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # You may also need to run Unblock-File against this script
 
 # You will need to install Microsoft App Installer to get winget
