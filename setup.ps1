@@ -1,19 +1,19 @@
 #Requires -RunAsAdministrator
 
 # TODO:
+# * Start the store app to load the updates before we begin
 # * Use one drop file to keep state, rather than one for every stage
-# * Make sure the wondows version is at least 19041
 # * Auto elevate to Admin
 # * While doing rebooting, re-start script on login automatically
-# * Prompt user to close everyhting before we start
+# * add uninstall of Windows Installer apps
+# * Add Windows Store uninstaller
+# * Use a configuration file to allow different configs fpr different computers
+# * Do upgrades before WSL to allow for an update to a more recent version of Windows
 
 # Install stuff, and configure stuff
 # You will need to set the execution policy for scripts
 # for me: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # You may also need to run Unblock-File against this script
-
-# You will need to install Microsoft App Installer to get winget
-# https://www.microsoft.com/store/productId/9NBLGGH4NNS1
 
 # The buildnumber of this version of Windows
 $WindowsVersion=[long]::Parse((Get-WmiObject Win32_OperatingSystem).BuildNumber)
