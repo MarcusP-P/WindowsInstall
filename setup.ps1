@@ -9,6 +9,9 @@
 # * Add Windows Store uninstaller
 # * Use a configuration file to allow different configs fpr different computers
 # * Do upgrades before WSL to allow for an update to a more recent version of Windows
+# * Add configuration for PowerToy screen layouts
+# * Check requirements before installing items (e.g. Terminal)
+# * Add download for non winget installers
 
 # Install stuff, and configure stuff
 # You will need to set the execution policy for scripts
