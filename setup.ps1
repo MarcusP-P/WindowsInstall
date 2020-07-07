@@ -5,9 +5,6 @@
 # for me: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # You may also need to run Unblock-File against this script
 
-# You will need to install Microsoft App Installer to get winget
-# https://www.microsoft.com/store/productId/9NBLGGH4NNS1
-
 # The buildnumber of this version of Windows
 $WindowsVersion=[long]::Parse((Get-WmiObject Win32_OperatingSystem).BuildNumber)
 
