@@ -27,3 +27,4 @@ You may also need to run `Unblock-File` against this script
 * Can we configure Edge from the script?
 * Can we configure Windows?
 * Setup Office 365
+* Set power settings
