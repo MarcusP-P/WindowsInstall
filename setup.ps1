@@ -33,7 +33,7 @@ if (!(Test-Path $tempFile -PathType leaf))
 	
     $null > $tempFile
 
-	Read-Host -Prompt "Press Enter to reboot..."
+	Read-Host -Prompt "Press Enter to reboot"
 
     shutdown /r /f /t 0
 
@@ -62,13 +62,13 @@ if ($windowsVersion -ge $windows2004)
 
     $wsl2_kernel=$env:TEMP + "\wsl_update_x64.msi"
 
-    echo "Downloading WSL kernel $wsl2_kernel"
+    Write-Output "Downloading WSL kernel $wsl2_kernel"
 
     Invoke-WebRequest -Uri "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" -OutFile "$wsl2_kernel"
 
-    Start-Process $wsl2_kernel -ArgumentList '/quiet' -Wait
+    Start-Process "$wsl2_kernel" -ArgumentList '/quiet' -Wait
 
-    del $wsl2_kernel
+    Remove-Item -Path "$wsl2_kernel"
 
     # Set the wsl default version before we begin
     wsl --set-default-version 2
@@ -113,3 +113,64 @@ Read-Host -Prompt "Press Enter once the package is installed"
 
 # Setup the distro
 ubuntu
+
+# Fork git client
+$fork_Installer=$env:TEMP + "\ForkInstaller.exe"
+Write-Output "Downloading Fork Installer $wsl2_kernel"
+Invoke-WebRequest -Uri "https://git-fork.com/update/win/ForkInstaller.exe" -OutFile "$fork_Installer"
+
+Start-Process "$fork_Installer" -Wait
+
+Read-Host -Prompt "Press Enter once Fork has finished installing"
+
+Remove-Item -Path "$fork_Installer"
+
+# Office365
+
+#https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe
+
+$Office365_Deployment=$env:TEMP + "\officedeploymenttool_12827-20268.exe"
+$Office365_Extract=$env:TEMP + "\officedeploymenttool_12827-20268"
+$Office365_Tool=$Office365_Extract + "\setup.exe"
+$Office365_Config_File_Name="Office.xml"
+$Office365_Config_File=$Office365_Extract + "\" +$Office365_Config_File_Name
+
+$Office365_Config_Contents=@'
+<Configuration>
+  <Add OfficeClientEdition="64" MigrateArch="True" OfficeMgmtCOM="False">
+    <Product ID="O365HomePremRetail">
+      <Language ID="MatchOS" Fallback="en-us" />
+	  <Display Level="Full" AcceptEULA="FALSE" />
+      <ExcludeApp ID="Access" />
+      <ExcludeApp ID="OneNote" />
+      <ExcludeApp ID="OneDrive" />
+      <ExcludeApp ID="Outlook" />
+      <ExcludeApp ID="Publisher" />
+    </Product>
+    <Product ID="VisioPro2019Retail">
+      <Language ID="en-us" />
+    </Product>
+    <Product ID="ProjectPro2019Retail">
+      <Language ID="en-us" />
+    </Product>
+  </Add>
+</Configuration>
+'@
+
+Write-Output "Downloading Office deployment tool $Office365_Deployment"
+Invoke-WebRequest -Uri "https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe" -OutFile "$Office365_Deployment"
+
+Write-Output "Extract Office365 Deploymeny Tool"
+Start-Process "$Office365_Deployment" -ArgumentList "/extract:""$Office365_Extract"" /quiet" -Wait
+
+Remove-Item -Path "$Office365_Deployment"
+
+# Create the config file
+
+Write-Output "Creating Office365 config file"
+New-Item -Path "$Office365_Extract\" -Name "$Office365_Config_File_Name" -ItemType "file" -Value "$Office365_Config_Contents" | Out-Null
+
+Write-Output "Installing Office 365"
+Start-Process "$Office365_Tool" -ArgumentList "/configure ""$Office365_Config_File""" -Wait
+
+Remove-Item -Path "$Office365_Extract" -Recurse

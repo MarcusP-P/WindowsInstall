@@ -16,7 +16,7 @@ You may also need to run `Unblock-File` against this script
 * Use one drop file to keep state, rather than one for every stage
 * Auto elevate to Admin
 * While doing rebooting, re-start script on login automatically
-* add uninstall of Windows Installer apps
+* Add uninstall of Windows Installer apps
 * Add Windows Store uninstaller
 * Use a configuration file to allow different configs fpr different computers
 * Do upgrades before WSL to allow for an update to a more recent version of Windows
@@ -26,5 +26,4 @@ You may also need to run `Unblock-File` against this script
 * Configure WSL environment
 * Can we configure Edge from the script?
 * Can we configure Windows?
-* Setup Office 365
 * Set power settings
