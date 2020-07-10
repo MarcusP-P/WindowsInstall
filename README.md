@@ -28,6 +28,8 @@ You may also need to run `Unblock-File` against this script
 ### Features
 * Uninstall included Windows Installer apps
 * Uninstall included Windows Store apps
+* Add Visual Studio Extenstions
+* Add VS Code Extensions
 
 ### Configuration
 * Configure WSL environment
