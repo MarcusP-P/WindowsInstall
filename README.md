@@ -13,13 +13,17 @@ You may also need to run `Unblock-File` against this script
 
 ## Todo
 ### Architecture
-* Create functions that are called to install stuff, and call those (including manually running installers)
+* Create function to install winget applications
+* Create function to install Windows Store apps
+* Create function to install downloaded files
+* Create function to update Windows
+* Create function to install Office 365
 * Create a configuration file, and then call the functions based on lines in the config file
 * Use the Windows Update PowerShell modules to do the Windows updating
+* Use one drop file to keep state, rather than one for every stage
 
 ### Missing bits
 * Start the store app to load the updates before we begin
-* Use one drop file to keep state, rather than one for every stage
 * Auto elevate to Admin
 * While doing rebooting, re-start script on login automatically
 * Do upgrades before WSL to allow for an update to a more recent version of Windows
