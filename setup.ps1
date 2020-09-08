@@ -23,6 +23,19 @@ if ($windowsVersion -lt $windows1703)
 	exit
 }
 
+# Install a windows store app
+function Install-StoreApp
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$ProductId
+    )
+    # When winget supports Windows Store, update this
+    Start-Process "ms-windows-store://pdp/?productId=$ProductID"
+    Read-Host -Prompt "Press Enter once the package is installed"
+}
+
 $tempFile=$env:TEMP + "\updateStatus"
 
 if (!(Test-Path $tempFile -PathType leaf))
@@ -75,8 +88,7 @@ if ($windowsVersion -ge $windows2004)
 }
 
 # Install winget
-Start-Process "ms-windows-store://pdp/?productId=9NBLGGH4NNS1"
-Read-Host -Prompt "Press Enter once the package is installed"
+Install-StoreApp -ProductId 9NBLGGH4NNS1
 
 # winget install --exact OpenJS.Nodejs
 winget install --exact Microsoft.VisualStudio.Enterprise --override "--passive --wait --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;installOptional --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1"
@@ -88,10 +100,7 @@ winget install --exact AgileBits.1Password
 winget install --exact Microsoft.PowerShell
 winget install --exact Microsoft.PowerToys
 
-# When winget supports Windows Store, update this
-#winget install --exact Microsoft.WindowsTerminal
-Start-Process "ms-windows-store://pdp/?productId=9N0DX20HK701"
-Read-Host -Prompt "Press Enter once the package is installed"
+Install-StoreApp -ProductId 9N0DX20HK701
 
 winget install --exact Notepad++.Notepad++
 winget install --exact Git.Git
@@ -105,18 +114,15 @@ winget install --exact Microsoft.AzureDataStudio
 
 winget install --exact VMware.WorkstationPro
 
-# The Winget version of Ubuntu is 18.x, so get this from the store
-# When winget supports Windows Store, update this
 #winget install --exact Canonical.Ubuntu
-Start-Process "ms-windows-store://pdp/?productId=9NBLGGH4MSV6"
-Read-Host -Prompt "Press Enter once the package is installed"
+Install-StoreApp -ProductId 9NBLGGH4MSV6
 
 # Setup the distro
 ubuntu
 
 # Fork git client
 $fork_Installer=$env:TEMP + "\ForkInstaller.exe"
-Write-Output "Downloading Fork Installer $wsl2_kernel"
+Write-Output "Downloading Fork Installer $fork_Installer"
 Invoke-WebRequest -Uri "https://git-fork.com/update/win/ForkInstaller.exe" -OutFile "$fork_Installer"
 
 Start-Process "$fork_Installer" -Wait
