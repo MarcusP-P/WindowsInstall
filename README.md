@@ -9,13 +9,12 @@ For me:
 
 You may also need to run `Unblock-File` against this script
 
-
-
 ## Todo
 ### Architecture
 * Create function to install winget applications
 * Create function to install Windows Store apps
 * Create function to install downloaded files
+* Create function to install downloaded MSI files
 * Create function to update Windows
 * Create function to install Office 365
 * Create a configuration file, and then call the functions based on lines in the config file
