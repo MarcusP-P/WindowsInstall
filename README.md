@@ -1,6 +1,10 @@
 # WindowsInstall
 A Script to install a clean Windows machine to something useful. 
 
+## Important note about Windows Package Manager
+You will need to [join the Windows Package Manager Insiders Program](http://aka.ms/winget-InsiderProgram) 
+and make sure you're logged into the Windows Store
+
 ## To make PowerShell work
 You will need to set the execution policy for scripts. 
 
