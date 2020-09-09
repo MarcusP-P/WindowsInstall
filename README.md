@@ -30,6 +30,8 @@ You may also need to run `Unblock-File` against this script
 * While doing rebooting, re-start script on login automatically
 * Do upgrades before WSL to allow for an update to a more recent version of Windows
 * Check requirements before installing items (e.g. Terminal)
+* Check if Winget is installed
+* Install latest version of Windows
 
 ### Features
 * Uninstall included Windows Installer apps
