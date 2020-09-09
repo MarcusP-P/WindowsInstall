@@ -23,6 +23,16 @@ if ($windowsVersion -lt $windows1703)
 	exit
 }
 
+# Windows store updates
+function Update-StoreApps
+{
+	Write-Output "Upgrade all Windows Store apps. Please remember to log into the Windows Store when it opens."
+    Read-Host -Prompt "Press Enter to start updating apps"
+    Start-Process "ms-windows-store://downloadsandupdates"
+    Read-Host -Prompt "Press Enter once the apps are updated"
+
+}
+
 # Install a windows store app
 function Install-StoreApp
 {
@@ -86,6 +96,9 @@ if ($windowsVersion -ge $windows2004)
     # Set the wsl default version before we begin
     wsl --set-default-version 2
 }
+
+# Windows store updates page
+Update-StoreApps
 
 # Install winget
 Install-StoreApp -ProductId 9NBLGGH4NNS1

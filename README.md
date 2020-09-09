@@ -3,7 +3,8 @@ A Script to install a clean Windows machine to something useful.
 
 ## Important note about Windows Package Manager
 You will need to [join the Windows Package Manager Insiders Program](http://aka.ms/winget-InsiderProgram) 
-and make sure you're logged into the Windows Store
+and make sure you're logged into the Windows Store (You can log into the store while the store 
+updates are being downloaded)
 
 ## To make PowerShell work
 You will need to set the execution policy for scripts. 
@@ -25,7 +26,6 @@ You may also need to run `Unblock-File` against this script
 * Use one drop file to keep state, rather than one for every stage
 
 ### Missing bits
-* Start the store app to load the updates before we begin
 * Auto elevate to Admin
 * While doing rebooting, re-start script on login automatically
 * Do upgrades before WSL to allow for an update to a more recent version of Windows
