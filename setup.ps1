@@ -46,6 +46,21 @@ function Install-StoreApp
     Read-Host -Prompt "Press Enter once the package is installed"
 }
 
+# Install a winget package
+function Install-WingetPackage
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string] $Id,
+        [string[]] $AdditionalOptions
+    )
+    Write-Output "Installing $Id..."
+    winget install --exact $Id $AdditionalOptions
+
+
+}
+
 $tempFile=$env:TEMP + "\updateStatus"
 
 if (!(Test-Path $tempFile -PathType leaf))
@@ -103,31 +118,31 @@ Update-StoreApps
 # Install winget
 Install-StoreApp -ProductId 9NBLGGH4NNS1
 
-# winget install --exact OpenJS.Nodejs
-winget install --exact Microsoft.VisualStudio.Enterprise --override "--passive --wait --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;installOptional --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1"
-winget install --exact Microsoft.VisualStudioCode
+Install-WingetPackage -Id OpenJS.Nodejs
+Install-WingetPackage -Id Microsoft.VisualStudio.Enterprise -AdditionalOptions ("--override", "--passive --wait --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;installOptional --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1")
+Install-WingetPackage -Id Microsoft.VisualStudioCode
 
 # Install 1Password
-winget install --exact Microsoft.Edge
-winget install --exact AgileBits.1Password
-winget install --exact Microsoft.PowerShell
-winget install --exact Microsoft.PowerToys
+Install-WingetPackage -Id Microsoft.Edge
+Install-WingetPackage -Id AgileBits.1Password
+Install-WingetPackage -Id Microsoft.PowerShell
+Install-WingetPackage -Id Microsoft.PowerToys
 
 Install-StoreApp -ProductId 9N0DX20HK701
 
-winget install --exact Notepad++.Notepad++
-winget install --exact Git.Git
-winget install --exact PuTTY.PuTTY
-winget install --exact TortoiseGit.TortoiseGit
-winget install --exact vim.vim
-winget install --exact 7zip.7zip
+Install-WingetPackage -Id Notepad++.Notepad++
+Install-WingetPackage -Id Git.Git
+Install-WingetPackage -Id PuTTY.PuTTY
+Install-WingetPackage -Id TortoiseGit.TortoiseGit
+Install-WingetPackage -Id vim.vim
+Install-WingetPackage -Id 7zip.7zip
 
-winget install --exact SQLiteBrowser.SQLiteBrowser
-winget install --exact Microsoft.AzureDataStudio
+Install-WingetPackage -Id SQLiteBrowser.SQLiteBrowser
+Install-WingetPackage -Id Microsoft.AzureDataStudio
 
-winget install --exact VMware.WorkstationPro
+Install-WingetPackage -Id VMware.WorkstationPro
 
-#winget install --exact Canonical.Ubuntu
+#Install-WingetPackage -Id Canonical.Ubuntu
 Install-StoreApp -ProductId 9NBLGGH4MSV6
 
 # Setup the distro

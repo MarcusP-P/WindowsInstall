@@ -16,7 +16,6 @@ You may also need to run `Unblock-File` against this script
 
 ## Todo
 ### Architecture
-* Create function to install winget applications
 * Create function to install downloaded files
 * Create function to install downloaded MSI files
 * Create function to update Windows
