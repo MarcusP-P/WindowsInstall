@@ -142,6 +142,19 @@ Install-WingetPackage -Id Microsoft.AzureDataStudio
 
 Install-WingetPackage -Id VMware.WorkstationPro
 
+# Install Store stuff that comes with the surface
+# Surface App
+Install-StoreApp -ProductId 9WZDNCRFJB8P
+
+# Whiteboard
+Install-StoreApp -ProductId 9MSPC6MP8FM4
+
+# MPEG2 Video Extensions
+Install-StoreApp -ProductId 9N95Q1ZZPMH4
+
+# HEVC Video Extensions
+Install-StoreApp -ProductId 9NMZLZ57R3T7
+
 #Install-WingetPackage -Id Canonical.Ubuntu
 Install-StoreApp -ProductId 9NBLGGH4MSV6
 
