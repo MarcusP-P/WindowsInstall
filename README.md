@@ -49,3 +49,4 @@ You may also need to run `Unblock-File` against this script
 * Install PowerLine
 * Add Terminal configuration
 	* Include PowerLine
+* Configure Powershell
