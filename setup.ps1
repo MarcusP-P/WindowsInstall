@@ -195,10 +195,12 @@ $Office365_Config_Contents=@'
       <ExcludeApp ID="Publisher" />
     </Product>
     <Product ID="VisioPro2019Retail">
-      <Language ID="en-us" />
+      <Language ID="MatchOS" Fallback="en-us" />
+	  <Display Level="Full" AcceptEULA="FALSE" />
     </Product>
     <Product ID="ProjectPro2019Retail">
-      <Language ID="en-us" />
+      <Language ID="MatchOS" Fallback="en-us" />
+	  <Display Level="Full" AcceptEULA="FALSE" />
     </Product>
   </Add>
 </Configuration>
