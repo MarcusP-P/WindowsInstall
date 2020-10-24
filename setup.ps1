@@ -61,6 +61,42 @@ function Install-WingetPackage
 
 }
 
+# Download ad install an installer
+function Install-DownloadedFile
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string] $Url,
+        [string] $WaitMessage,
+        [string[]] $AdditionalOptions
+    )
+
+    $fileName=[System.IO.Path]::GetFileName($url)
+
+    $filePath=$env:TEMP + "\" + $fileName
+
+    Write-Output "Downloading $wsl2_kernel"
+
+    Invoke-WebRequest -Uri $Url -OutFile "$filePath"
+
+    if (!$AdditionalOptions)
+    {
+        Start-Process "$filePath" -Wait
+    }
+    else
+    {
+        Start-Process "$filePath" -ArgumentList $AdditionalOptions -Wait
+    }
+
+    if ($WaitMessage)
+    {
+    	Read-Host -Prompt "$WaitMessage"
+    }
+
+    Remove-Item -Path "$filePath"
+}
+
 $tempFile=$env:TEMP + "\updateStatus"
 
 if (!(Test-Path $tempFile -PathType leaf))
@@ -98,15 +134,7 @@ if ($windowsVersion -ge $windows2004)
     # the WSL kernel needs to be downlaoded manually for now.
     # see https://aka.ms/wsl2kernel
 
-    $wsl2_kernel=$env:TEMP + "\wsl_update_x64.msi"
-
-    Write-Output "Downloading WSL kernel $wsl2_kernel"
-
-    Invoke-WebRequest -Uri "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" -OutFile "$wsl2_kernel"
-
-    Start-Process "$wsl2_kernel" -ArgumentList '/quiet' -Wait
-
-    Remove-Item -Path "$wsl2_kernel"
+    Install-DownloadedFile -Url "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" -AdditionalOptions ("/quiet")
 
     # Set the wsl default version before we begin
     wsl --set-default-version 2
@@ -162,15 +190,7 @@ Install-StoreApp -ProductId 9NBLGGH4MSV6
 ubuntu
 
 # Fork git client
-$fork_Installer=$env:TEMP + "\ForkInstaller.exe"
-Write-Output "Downloading Fork Installer $fork_Installer"
-Invoke-WebRequest -Uri "https://git-fork.com/update/win/ForkInstaller.exe" -OutFile "$fork_Installer"
-
-Start-Process "$fork_Installer" -Wait
-
-Read-Host -Prompt "Press Enter once Fork has finished installing"
-
-Remove-Item -Path "$fork_Installer"
+Install-DownloadedFile -Url https://git-fork.com/update/win/ForkInstaller.exe -WaitMessage "Press Enter once Fork has finished installing"
 
 # Office365
 
