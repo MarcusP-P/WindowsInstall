@@ -19,7 +19,6 @@ You may also need to run `Unblock-File` against this script
 * Create function to install downloaded files
 * Create function to install downloaded MSI files
 * Create function to update Windows
-* Create function to install Office 365
 * Create a configuration file, and then call the functions based on lines in the config file
 * Use the Windows Update PowerShell modules to do the Windows updating
 * Use one drop file to keep state, rather than one for every stage

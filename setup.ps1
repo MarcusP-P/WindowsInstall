@@ -61,7 +61,7 @@ function Install-WingetPackage
 
 }
 
-# Download ad install an installer
+# Download and install an installer
 function Install-DownloadedFile
 {
     param
@@ -97,6 +97,255 @@ function Install-DownloadedFile
     Remove-Item -Path "$filePath"
 }
 
+
+# Create an Office Deployment Tool XML File
+function Create-OfficeDeploymentConfigurationFile
+{
+    param
+    (
+         [Parameter (Mandatory)]
+         [string] $FileName
+    )
+
+    echo "Creating Office Configuration file: $FileName"
+
+    [xml]$ConfigurationFile=New-Object xml
+
+    $Configuration=$ConfigurationFile.CreateElement("Configuration")
+    $Add=$ConfigurationFile.CreateElement("Add")
+
+    $Configuration.AppendChild($Add) | Out-Null
+
+    $ConfigurationFile.AppendChild($Configuration) | Out-Null
+
+    $ConfigurationFile.Save($FileName)   
+}
+
+# Add Attributes to Add
+function Add-OfficeConfigurationAttributesToAdd
+{
+    param
+    (
+         [Parameter (Mandatory)]
+         [string] $FileName,
+         [Parameter (Mandatory)]
+         [string] $Attribute,
+         [Parameter (Mandatory)]
+         [string] $Value
+    )
+
+    echo "Adding configuration attribute $Attribute=$Value"
+
+    [xml]$ConfigurationFile=New-Object xml
+    $ConfigurationFile.PreserveWhitespace=$true
+    $ConfigurationFile.Load($FileName)
+
+    # We only assume one Add element.
+    $Add=$ConfigurationFile.SelectSingleNode("/Configuration/Add[1]")
+    $NewAttribute=$ConfigurationFile.CreateAttribute($Attribute)
+    $NewAttribute.Value = $Value
+
+    $Add.Attributes.Append($NewAttribute) | Out-Null
+
+    $ConfigurationFile.Save($FileName)
+}
+        
+# Add Office Products
+function Add-OfficeProduct
+{
+    param
+    (
+         [Parameter (Mandatory)]
+         [string] $FileName,
+         [Parameter (Mandatory)]
+         [string] $ProductID
+    )
+
+    echo "Adding Product $ProductID"
+    [xml]$ConfigurationFile=New-Object xml
+    $ConfigurationFile.PreserveWhitespace=$true
+    $ConfigurationFile.Load($FileName)
+
+    # We only assume one Add element.
+    $Add=$ConfigurationFile.SelectSingleNode("/Configuration/Add[1]")
+
+    $Product=$ConfigurationFile.CreateElement("Product")
+
+    $ProductIdAttribute=$ConfigurationFile.CreateAttribute("ID")
+    $ProductIdAttribute.Value=$ProductID
+
+    $Product.Attributes.Append($ProductIdAttribute) | Out-Null
+    $Add.AppendChild($Product) | Out-Null
+
+    $ConfigurationFile.Save($FileName)
+
+}
+
+# Add a language to a produxt
+function Add-OfficeProductLangage
+{
+    param
+    (
+         [Parameter (Mandatory)]
+         [string] $FileName,
+         [Parameter (Mandatory)]
+         [string] $ProductID,
+         [Parameter (Mandatory)]
+         [string] $LanguageID
+    )
+
+    echo "Adding Product $ProductID Language: $LanguageID"
+
+    [xml]$ConfigurationFile=New-Object xml
+    $ConfigurationFile.PreserveWhitespace=$true
+    $ConfigurationFile.Load($FileName)
+
+    # We only assume one Add element.
+    $Product=$ConfigurationFile.SelectSingleNode("/Configuration/Add/Product[@ID='$ProductID']")
+
+    $Language=$ConfigurationFile.CreateElement("Language")
+
+    $LanguageIdAttribute=$ConfigurationFile.CreateAttribute("ID")
+    $LanguageIdAttribute.Value=$LanguageID
+
+    $Language.Attributes.Append($LanguageIdAttribute) | Out-Null
+
+
+    $Product.AppendChild($Language) | Out-Null
+
+
+    $ConfigurationFile.Save($FileName)
+}
+
+function Add-OfficeProductLanguageAttribute
+{
+    param
+    (
+         [Parameter (Mandatory)]
+         [string] $FileName,
+         [Parameter (Mandatory)]
+         [string] $ProductID,
+         [Parameter (Mandatory)]
+         [string] $LanguageID,
+         [Parameter (Mandatory)]
+         [string] $Attribute,
+         [Parameter (Mandatory)]
+         [string] $Value
+    )
+
+    echo "Adding Product $ProductID Language: $LanguageID Attribute $Attribute=$Value"
+
+    [xml]$ConfigurationFile=New-Object xml
+    $ConfigurationFile.PreserveWhitespace=$true
+    $ConfigurationFile.Load($FileName)
+
+    # We only assume one Add element.
+    $Language=$ConfigurationFile.SelectSingleNode("/Configuration/Add/Product[@ID='$ProductID']/Language[@ID='$LanguageID']")
+
+    $LanguageIdAttribute=$ConfigurationFile.CreateAttribute("$Attribute")
+    $LanguageIdAttribute.Value=$Value
+
+    $Language.Attributes.Append($LanguageIdAttribute) | Out-Null
+
+    $ConfigurationFile.Save($FileName)
+}
+
+# Add a language to a produxt
+function Add-OfficeProductDisplay
+{
+    param
+    (
+         [Parameter (Mandatory)]
+         [string] $FileName,
+         [Parameter (Mandatory)]
+         [string] $ProductID
+    )
+
+    echo "Adding Product $ProductID Display Element"
+
+    [xml]$ConfigurationFile=New-Object xml
+    $ConfigurationFile.PreserveWhitespace=$true
+    $ConfigurationFile.Load($FileName)
+
+    # We only assume one Add element.
+    $Product=$ConfigurationFile.SelectSingleNode("/Configuration/Add/Product[@ID='$ProductID']")
+
+    $Display=$ConfigurationFile.CreateElement("Display")
+
+    $Product.AppendChild($Display) | Out-Null
+
+
+    $ConfigurationFile.Save($FileName)
+}
+
+function Add-OfficeProductDisplayAttribute
+{
+    param
+    (
+         [Parameter (Mandatory)]
+         [string] $FileName,
+         [Parameter (Mandatory)]
+         [string] $ProductID,
+         [Parameter (Mandatory)]
+         [string] $Attribute,
+         [Parameter (Mandatory)]
+         [string] $Value
+    )
+
+    echo "Adding Product $ProductID Display Attribute $Attribute=$Value"
+
+    [xml]$ConfigurationFile=New-Object xml
+    $ConfigurationFile.PreserveWhitespace=$true
+    $ConfigurationFile.Load($FileName)
+
+    # We only assume one Add element, and one Display Element per Product
+    $Display=$ConfigurationFile.SelectSingleNode("/Configuration/Add/Product[@ID='$ProductID']/Display[1]")
+
+    $DisplayIdAttribute=$ConfigurationFile.CreateAttribute("$Attribute")
+    $DisplayIdAttribute.Value=$Value
+
+    $Display.Attributes.Append($DisplayIdAttribute) | Out-Null
+
+    $ConfigurationFile.Save($FileName)
+}
+
+function Add-OfficeProductExcludeApp
+{
+    param
+    (
+         [Parameter (Mandatory)]
+         [string] $FileName,
+         [Parameter (Mandatory)]
+         [string] $ProductID,
+         [Parameter (Mandatory)]
+         [string] $ExcludeAppID
+    )
+
+    echo "Adding Product $ProductID ExcludeApp $ExcludeAppID"
+
+    [xml]$ConfigurationFile=New-Object xml
+    $ConfigurationFile.PreserveWhitespace=$true
+    $ConfigurationFile.Load($FileName)
+
+    # We only assume one Add element.
+    $Product=$ConfigurationFile.SelectSingleNode("/Configuration/Add/Product[@ID='$ProductID']")
+
+    $ExcludeApp=$ConfigurationFile.CreateElement("ExcludeApp")
+
+    $ExcludeIdAttribute=$ConfigurationFile.CreateAttribute("ID")
+    $ExcludeIdAttribute.Value=$ExcludeAppID
+
+    $ExcludeApp.Attributes.Append($ExcludeIdAttribute) | Out-Null
+
+
+    $Product.AppendChild($ExcludeApp) | Out-Null
+
+
+    $ConfigurationFile.Save($FileName)
+
+}
+
+##### Start of commands...
 $tempFile=$env:TEMP + "\updateStatus"
 
 if (!(Test-Path $tempFile -PathType leaf))
@@ -202,42 +451,37 @@ $Office365_Tool=$Office365_Extract + "\setup.exe"
 $Office365_Config_File_Name="Office.xml"
 $Office365_Config_File=$Office365_Extract + "\" +$Office365_Config_File_Name
 
-$Office365_Config_Contents=@'
-<Configuration>
-  <Add OfficeClientEdition="64" MigrateArch="True" OfficeMgmtCOM="False">
-    <Product ID="O365HomePremRetail">
-      <Language ID="MatchOS" Fallback="en-us" />
-	  <Display Level="Full" AcceptEULA="FALSE" />
-      <ExcludeApp ID="Access" />
-      <ExcludeApp ID="OneNote" />
-      <ExcludeApp ID="OneDrive" />
-      <ExcludeApp ID="Outlook" />
-      <ExcludeApp ID="Publisher" />
-    </Product>
-    <Product ID="VisioPro2019Retail">
-      <Language ID="MatchOS" Fallback="en-us" />
-	  <Display Level="Full" AcceptEULA="FALSE" />
-    </Product>
-    <Product ID="ProjectPro2019Retail">
-      <Language ID="MatchOS" Fallback="en-us" />
-	  <Display Level="Full" AcceptEULA="FALSE" />
-    </Product>
-  </Add>
-</Configuration>
-'@
-
-Write-Output "Downloading Office deployment tool $Office365_Deployment"
-Invoke-WebRequest -Uri "https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe" -OutFile "$Office365_Deployment"
-
-Write-Output "Extract Office365 Deploymeny Tool"
-Start-Process "$Office365_Deployment" -ArgumentList "/extract:""$Office365_Extract"" /quiet" -Wait
-
-Remove-Item -Path "$Office365_Deployment"
+# Download and extract the Office Deployment tool
+Install-DownloadedFile -Url "https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe" -AdditionalOptions ("/extract:""$Office365_Extract""","/quiet")
 
 # Create the config file
+Create-OfficeDeploymentConfigurationFile -fileName $Office365_Config_File
+Add-OfficeConfigurationAttributesToAdd -Attribute OfficeClientEdition -value 64 -FileName $Office365_Config_File
+Add-OfficeConfigurationAttributesToAdd -Attribute MigrateArch -value True -FileName $Office365_Config_File
+Add-OfficeConfigurationAttributesToAdd -Attribute OfficeMgmtCOM -value False -FileName $Office365_Config_File
 
-Write-Output "Creating Office365 config file"
-New-Item -Path "$Office365_Extract\" -Name "$Office365_Config_File_Name" -ItemType "file" -Value "$Office365_Config_Contents" | Out-Null
+Add-OfficeProduct -ProductID O365HomePremRetail -FileName $Office365_Config_File
+Add-OfficeProductLangage -ProductID O365HomePremRetail -LanguageID MatchOS -FileName $Office365_Config_File
+Add-OfficeProductLanguageAttribute -ProductID O365HomePremRetail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
+Add-OfficeProductDisplay -ProductID O365HomePremRetail -FileName $Office365_Config_File
+Add-OfficeProductDisplayAttribute -ProductID O365HomePremRetail -Attribute Level -Value Full -FileName $Office365_Config_File
+Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Access -FileName $Office365_Config_File
+Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID OneNote -FileName $Office365_Config_File
+Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID OneDrive -FileName $Office365_Config_File
+Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Outlook -FileName $Office365_Config_File
+Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Publisher -FileName $Office365_Config_File
+
+Add-OfficeProduct -ProductID VisioPro2019Retail -FileName $Office365_Config_File
+Add-OfficeProductLangage -ProductID VisioPro2019Retail -LanguageID MatchOS -FileName $Office365_Config_File
+Add-OfficeProductLanguageAttribute -ProductID VisioPro2019Retail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
+Add-OfficeProductDisplay -ProductID VisioPro2019Retail -FileName $Office365_Config_File
+Add-OfficeProductDisplayAttribute -ProductID VisioPro2019Retail -Attribute Level -Value Full -FileName $Office365_Config_File
+
+Add-OfficeProduct -ProductID ProjectPro2019Retail -FileName $Office365_Config_File
+Add-OfficeProductLangage -ProductID ProjectPro2019Retail -LanguageID MatchOS -FileName $Office365_Config_File
+Add-OfficeProductLanguageAttribute -ProductID ProjectPro2019Retail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
+Add-OfficeProductDisplay -ProductID ProjectPro2019Retail -FileName $Office365_Config_File
+Add-OfficeProductDisplayAttribute -ProductID ProjectPro2019Retail -Attribute Level -Value Full -FileName $Office365_Config_File
 
 Write-Output "Installing Office 365"
 Start-Process "$Office365_Tool" -ArgumentList "/configure ""$Office365_Config_File""" -Wait
