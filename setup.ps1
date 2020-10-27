@@ -1,6 +1,5 @@
 #Requires -RunAsAdministrator
 
-
 # You will need to set the execution policy for scripts
 # for me: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # You may also need to run Unblock-File against this script
@@ -17,11 +16,97 @@ $windows1803=17134
 $windows1709=16299
 $windows1703=15063
 
+$tempFile=$env:TEMP + "\Status.json"
+
+
 if ($windowsVersion -lt $windows1703)
 {
 	Write-Output "Winget only supports Windows 10 1703 or later. Because this script pretty much requires Winget, it will not run on an older version"
 	exit
 }
+
+### Functions for an empty status status file, settign the stage to 0
+function Create-EmptyStatus
+{
+    $status="" | Select Stage
+
+    # Stage 0 is the same as no stage
+    $status.Stage = 0
+
+    return $status
+}
+
+# Read the status file, creating it if needed
+function Get-StatusFile
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$fileName
+    )
+
+    if (!(Test-Path $fileName -PathType leaf))
+    {
+        $result = Create-EmptyStatus
+        Save-StatusFile -FileName $fileName -Status $status
+        return result
+    }
+
+    $status= Get-Content -Raw -Path $fileName | ConvertFrom-Json
+
+    return $status
+}
+
+# Save the status file
+function Save-StatusFile
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$fileName,
+        [Parameter (Mandatory)]
+        [object]$status
+    )
+
+    $status | ConvertTo-Json | Out-File $fileName
+
+}
+
+### Status stages
+# Get the stage from teh status file
+function Get-StatusStage
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$fileName
+    )
+
+    $status = Get-StatusFile $fileName
+
+    return $status.Stage
+
+}
+
+# Update the stage in the status file
+function Set-StatusStage
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$fileName,
+        [Parameter (Mandatory)]
+        [int]$stage
+    )
+
+    $status = Get-StatusFile -fileName $fileName
+
+    $status.Stage=$stage
+
+    Save-StatusFile -fileName $fileName -status $status
+}
+
+### Functions to perform actions
 
 # Windows store updates
 function Update-StoreApps
@@ -346,15 +431,13 @@ function Add-OfficeProductExcludeApp
 }
 
 ##### Start of commands...
-$tempFile=$env:TEMP + "\updateStatus"
-
-if (!(Test-Path $tempFile -PathType leaf))
+if ((Get-StatusStage -fileName $tempFile) -eq 0)
 {
     Rename-computer -NewName "Marcus-Surface" -Force
     Enable-WindowsOptionalFeature -FeatureName Microsoft-Windows-Subsystem-Linux -Online  -All -NoRestart
     Enable-WindowsOptionalFeature -FeatureName VirtualMachinePlatform -Online  -All -NoRestart
-	
-    $null > $tempFile
+
+    Set-StatusStage -fileName $tempFile	-stage 1
 
 	Read-Host -Prompt "Press Enter to reboot"
 
@@ -363,13 +446,11 @@ if (!(Test-Path $tempFile -PathType leaf))
     exit
 }
 
-$tempFile2=$env:TEMP + "\updateStatus2"
-
-if (!(Test-Path $tempFile2 -PathType leaf))
+if ((Get-StatusStage -fileName $tempFile) -eq 0)
 {
 	start ms-settings:windowsupdate-action
 	
-    $null > $tempFile2
+    Set-StatusStage -fileName $tempFile	-stage 2
 
 	Write-Output "Please install any windows updates. If you do not need to reboot this device, re-run this script"
 	
