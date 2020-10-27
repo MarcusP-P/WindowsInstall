@@ -26,15 +26,6 @@ if ($windowsVersion -lt $windows1703)
 }
 
 ### Functions for an empty status status file, settign the stage to 0
-function Create-EmptyStatus
-{
-    $status="" | Select Stage
-
-    # Stage 0 is the same as no stage
-    $status.Stage = 0
-
-    return $status
-}
 
 # Read the status file, creating it if needed
 function Get-StatusFile
@@ -47,9 +38,14 @@ function Get-StatusFile
 
     if (!(Test-Path $fileName -PathType leaf))
     {
-        $result = Create-EmptyStatus
+        $status="" | Select Stage
+
+        # Stage 0 is the same as no stage
+        $status.Stage = 0
+
+        # Save the new status
         Save-StatusFile -FileName $fileName -Status $status
-        return result
+        return $status
     }
 
     $status= Get-Content -Raw -Path $fileName | ConvertFrom-Json
@@ -67,7 +63,6 @@ function Save-StatusFile
         [Parameter (Mandatory)]
         [object]$status
     )
-
     $status | ConvertTo-Json | Out-File $fileName
 
 }
@@ -446,7 +441,7 @@ if ((Get-StatusStage -fileName $tempFile) -eq 0)
     exit
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 0)
+if ((Get-StatusStage -fileName $tempFile) -eq 1)
 {
 	start ms-settings:windowsupdate-action
 	
