@@ -19,7 +19,7 @@ You may also need to run `Unblock-File` against this script
 * Create function to update Windows
 * Create a configuration file, and then call the functions based on lines in the config file
 * Use the Windows Update PowerShell modules to do the Windows updating
-* Use one drop file to keep state, rather than one for every stage
+* Add the ability to include other config files
 
 ### Missing bits
 * Auto elevate to Admin
