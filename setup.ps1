@@ -4,6 +4,11 @@
 # for me: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # You may also need to run Unblock-File against this script
 
+param 
+(
+    [string] $ConfigFile
+)
+
 # The buildnumber of this version of Windows
 $WindowsVersion=[long]::Parse((Get-WmiObject Win32_OperatingSystem).BuildNumber)
 
@@ -38,10 +43,11 @@ function Get-StatusFile
 
     if (!(Test-Path $fileName -PathType leaf))
     {
-        $status="" | Select Stage
+        $status=@{Stage=0;ConfigFile=""}
 
-        # Stage 0 is the same as no stage
-        $status.Stage = 0
+        Write-Host "FOO"
+
+        Write-Host $status.
 
         # Save the new status
         Save-StatusFile -FileName $fileName -Status $status
@@ -68,7 +74,7 @@ function Save-StatusFile
 }
 
 ### Status stages
-# Get the stage from teh status file
+# Get the stage from the status file
 function Get-StatusStage
 {
     param
@@ -97,6 +103,40 @@ function Set-StatusStage
     $status = Get-StatusFile -fileName $fileName
 
     $status.Stage=$stage
+
+    Save-StatusFile -fileName $fileName -status $status
+}
+
+### Status config files
+# Get the configuration file
+function Get-StatusConfigFile
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$fileName
+    )
+
+    $status = Get-StatusFile $fileName
+
+    return $status.ConfigFile
+
+}
+
+# Update the stage in the status file
+function Set-StatusConfigFile
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$fileName,
+        [Parameter (Mandatory)]
+        [string]$configFilename
+    )
+
+    $status = Get-StatusFile -fileName $fileName
+
+    $status.ConfigFile=$configFilename
 
     Save-StatusFile -fileName $fileName -status $status
 }
@@ -426,6 +466,40 @@ function Add-OfficeProductExcludeApp
 }
 
 ##### Start of commands...
+
+### Make sure the config file exists and is setup
+# We only watn the user to pass the config filename on the command line
+if ((Get-StatusStage -fileName $tempFile) -eq 0)
+{
+    if (! $ConfigFile)
+    {
+        Write-Error "Configuration file not specified" -ErrorAction Stop
+    }
+
+    if (!(Test-Path $ConfigFile -PathType leaf))
+    {
+        Write-Error "Could not find configuration file $ConfigFile" -ErrorAction Stop
+    }
+
+    $ConfigFile = Resolve-Path $ConfigFile
+
+    Set-StatusConfigFile -fileName $tempFile -configFilename $ConfigFile
+}
+else
+{
+    if ($ConfigFile)
+    {
+        Write-Error "Configuration file shoudl not be passed" -ErrorAction Stop
+    }
+
+    $ConfigFile = Get-StatusConfigFile -fileName $tempFile
+
+    if (!(Test-Path $ConfigFile -PathType leaf))
+    {
+        Write-Error "Could not find configuration file $ConfigFile" -ErrorAction Stop
+    }
+}
+
 if ((Get-StatusStage -fileName $tempFile) -eq 0)
 {
     Rename-computer -NewName "Marcus-Surface" -Force
