@@ -14,10 +14,19 @@ For me:
 
 You may also need to run `Unblock-File` against this script
 
+## Configuration
+The Configuration is read form a JSON file. Look at Sample.json
+Basic configuration is at the top level:
+* `ComputerName` is used to rename the computer
+* `InstallWsl` is a boolean to install WSL. If you are on Windows 2004 or later, it will automatically enable WSL2
+
 ## Todo
 ### Architecture
 * Create function to update Windows
-* Create a configuration file, and then call the functions based on lines in the config file
+* Use the configuration file to install winget packages
+* Use the configuration file to download and install Installers
+* Use the configuration file to install Office
+* Option to skip Windows Update
 * Use the Windows Update PowerShell modules to do the Windows updating
 * Add the ability to include other config files
 

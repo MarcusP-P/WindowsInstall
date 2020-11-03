@@ -30,6 +30,25 @@ if ($windowsVersion -lt $windows1703)
 	exit
 }
 
+### Load the Configuration File
+function Get-Configuration
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$fileName
+    )
+    
+    if (!(Test-Path $fileName -PathType leaf))
+    {
+        Write-Error "Could not find configuration file $fileName" -ErrorAction Stop
+    }
+
+    $ConfigurationObject= Get-Content -Raw -Path $fileName -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+
+    return $ConfigurationObject
+}
+
 ### Functions for an empty status status file, settign the stage to 0
 
 # Read the status file, creating it if needed
@@ -500,19 +519,47 @@ else
     }
 }
 
+$Configuration = Get-Configuration -fileName $ConfigFile
+
 if ((Get-StatusStage -fileName $tempFile) -eq 0)
 {
-    Rename-computer -NewName "Marcus-Surface" -Force
-    Enable-WindowsOptionalFeature -FeatureName Microsoft-Windows-Subsystem-Linux -Online  -All -NoRestart
-    Enable-WindowsOptionalFeature -FeatureName VirtualMachinePlatform -Online  -All -NoRestart
+    $NeedsReboot=$false
+    if ($Config.ComputerName)
+    {
+        $Result = Rename-computer -NewName "$Config.ComputerName" -Force -PassThru -ErrorAction Stop
+        if ($Result.HasSucceeded -eq $true)
+        {
+            $NeedsReboot = $True
+        }
+    }
 
+    if ($Config.InstallWsl)
+    {
+        if ($Config.InstallWsl -eq $true)
+        {
+            $Result = Enable-WindowsOptionalFeature -FeatureName Microsoft-Windows-Subsystem-Linux -Online  -All -NoRestart
+            if ($Result.RestartNeeded -eq $true)
+            {
+                $NeedsReboot = $True
+            }
+
+            $Result = Enable-WindowsOptionalFeature -FeatureName VirtualMachinePlatform -Online  -All -NoRestart
+            if ($Result.RestartNeeded -eq $true)
+            {
+                $NeedsReboot = $True
+            }
+        }
+    }
     Set-StatusStage -fileName $tempFile	-stage 1
 
-	Read-Host -Prompt "Press Enter to reboot"
+    if ($NeedsReboot -eq $true)
+    {
+	    Read-Host -Prompt "Press Enter to reboot"
 
-    shutdown /r /f /t 0
+        shutdown /r /f /t 0
 
-    exit
+        exit
+    }
 }
 
 if ((Get-StatusStage -fileName $tempFile) -eq 1)
@@ -526,17 +573,25 @@ if ((Get-StatusStage -fileName $tempFile) -eq 1)
     exit
 }
 
-# WSL2 is only supported on Windows 2004 and later
-if ($windowsVersion -ge $windows2004)
+if ($Config.InstallWsl)
 {
+    if ($Config.InstallWsl -eq $true)
+    {
+        # WSL2 is only supported on Windows 2004 and later
+        # Since creating this, WSL 2 has been backported to Windows 10 1903, but I can't be bothered setting up the
+        # checks because I don't intend to run older versions of Windows. Feel free to file a PR
+        if ($windowsVersion -ge $windows2004)
+        {
 
-    # the WSL kernel needs to be downlaoded manually for now.
-    # see https://aka.ms/wsl2kernel
+            # the WSL kernel needs to be downlaoded manually for now.
+            # see https://aka.ms/wsl2kernel
 
-    Install-DownloadedFile -Url "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" -AdditionalOptions ("/quiet")
+            Install-DownloadedFile -Url "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" -AdditionalOptions ("/quiet")
 
-    # Set the wsl default version before we begin
-    wsl --set-default-version 2
+            # Set the wsl default version before we begin
+            wsl --set-default-version 2
+        }
+    }
 }
 
 # Windows store updates page
