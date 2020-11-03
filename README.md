@@ -27,6 +27,8 @@ Basic configuration is at the top level:
 * Use the configuration file to download and install Installers
 * Use the configuration file to install Office
 * Option to skip Windows Update
+* Install Winget AppX package, rather than making people sign up to AppInstaller Insider
+  * Make this configurable
 * Use the Windows Update PowerShell modules to do the Windows updating
 * Add the ability to include other config files
 
