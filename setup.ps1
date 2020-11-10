@@ -519,14 +519,16 @@ else
     }
 }
 
-$Configuration = Get-Configuration -fileName $ConfigFile
+$Config = Get-Configuration -fileName $ConfigFile
+
+
 
 if ((Get-StatusStage -fileName $tempFile) -eq 0)
 {
     $NeedsReboot=$false
     if ($Config.ComputerName)
     {
-        $Result = Rename-computer -NewName "$Config.ComputerName" -Force -PassThru -ErrorAction Stop
+        $Result = Rename-computer -NewName $Config.ComputerName -Force -PassThru -ErrorAction Stop
         if ($Result.HasSucceeded -eq $true)
         {
             $NeedsReboot = $True
