@@ -8,6 +8,7 @@
 $WindowsVersion=[long]::Parse((Get-WmiObject Win32_OperatingSystem).BuildNumber)
 
 # Known Build Numbers
+$windows20H2=19042
 $windows2004=19041
 $windows1909=18363
 $windows1903=18362
