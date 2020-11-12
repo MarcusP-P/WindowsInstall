@@ -41,8 +41,7 @@ Basic configuration is at the top level:
 ## Todo
 ### Architecture
 * Create function to update Windows
-* Use the configuration file to install winget packages
-* Use the configuration file to download and install Installers
+* Use the configuration file to install a file from a URL
 * Use the configuration file to install Office
 * Option to skip Windows Update
 * Install Winget AppX package, rather than making people sign up to AppInstaller Insider
