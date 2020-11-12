@@ -1,4 +1,107 @@
 {
 	"ComputerName": "Marcus-Surface",
-	"InstallWsl": true
+	"InstallWsl": true,
+	"TaskStages": [
+		{
+			"StageNumber": 1,
+			"Tasks": [
+				{
+					"Type": "microsoftStore",
+					"Id": "9NBLGGH4NNS1"
+				},
+				{
+					"Type": "winget",
+					"Id": "OpenJS.Nodejs"
+				},
+				{
+					"Type": "winget",
+					"Id": "Microsoft.VisualStudio.Enterprise",
+					"AdditionalOptions": [
+						"--override",
+						"--passive --wait --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;installOptional --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1"
+					]
+				},
+				{
+					"Type": "winget",
+					"Id": "Microsoft.VisualStudioCode"
+				},
+				{
+					"Type": "winget",
+					"Id": "Microsoft.Edge"
+				},
+				{
+					"Type": "winget",
+					"Id": "AgileBits.1Password"
+				},
+				{
+					"Type": "winget",
+					"Id": "AgileBits.1Password"
+				},
+				{
+					"Type": "winget",
+					"Id": "Microsoft.PowerToys"
+				},
+				{
+					"Type": "microsoftStore",
+					"Id": "9N0DX20HK701"
+				},
+				{
+					"Type": "winget",
+					"Id": "Notepad++.Notepad++"
+				},
+				{
+					"Type": "winget",
+					"Id": "Git.Git"
+				},
+				{
+					"Type": "winget",
+					"Id": "PuTTY.PuTTY"
+				},
+				{
+					"Type": "winget",
+					"Id": "TortoiseGit.TortoiseGit"
+				},
+				{
+					"Type": "winget",
+					"Id": "vim.vim"
+				},
+				{
+					"Type": "winget",
+					"Id": "7zip.7zip"
+				},				
+				{
+					"Type": "winget",
+					"Id": "SQLiteBrowser.SQLiteBrowser"
+				},
+				{
+					"Type": "winget",
+					"Id": "Microsoft.AzureDataStudio"
+				},
+				{
+					"Type": "winget",
+					"Id": "VMware.WorkstationPro"
+				},
+				{
+					"Type": "microsoftStore",
+					"Id": "9WZDNCRFJB8P"
+				},
+				{
+					"Type": "microsoftStore",
+					"Id": "9MSPC6MP8FM4"
+				},
+				{
+					"Type": "microsoftStore",
+					"Id": "9N95Q1ZZPMH4"
+				},
+				{
+					"Type": "microsoftStore",
+					"Id": "9NMZLZ57R3T7"
+				},
+				{
+					"Type": "microsoftStore",
+					"Id": "9NBLGGH4MSV6"
+				}
+			]
+		}
+	]
 }

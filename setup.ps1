@@ -27,7 +27,7 @@ $tempFile=$env:TEMP + "\Status.json"
 
 if ($windowsVersion -lt $windows1703)
 {
-	Write-Output "Winget only supports Windows 10 1703 or later. Because this script pretty much requires Winget, it will not run on an older version"
+	Write-Host "Winget only supports Windows 10 1703 or later. Because this script pretty much requires Winget, it will not run on an older version"
 	exit
 }
 
@@ -63,11 +63,7 @@ function Get-StatusFile
 
     if (!(Test-Path $fileName -PathType leaf))
     {
-        $status=@{Stage=0;ConfigFile=""}
-
-        Write-Host "FOO"
-
-        Write-Host $status.
+        $status=@{Stage=0;ConfigFile="";TaskStage=0}
 
         # Save the new status
         Save-StatusFile -FileName $fileName -Status $status
@@ -127,6 +123,40 @@ function Set-StatusStage
     Save-StatusFile -fileName $fileName -status $status
 }
 
+### Status TaskStages
+# Get the stage from the status file
+function Get-TaskStage
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$fileName
+    )
+
+    $status = Get-StatusFile $fileName
+
+    return $status.TaskStage
+
+}
+
+# Update the stage in the status file
+function Set-TaskStage
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$fileName,
+        [Parameter (Mandatory)]
+        [int]$stage
+    )
+
+    $status = Get-StatusFile -fileName $fileName
+
+    $status.TaskStage=$stage
+
+    Save-StatusFile -fileName $fileName -status $status
+}
+
 ### Status config files
 # Get the configuration file
 function Get-StatusConfigFile
@@ -161,12 +191,54 @@ function Set-StatusConfigFile
     Save-StatusFile -fileName $fileName -status $status
 }
 
+### Functions to deal with the configuration
+# get the next item that matches the $stage, or the next lowerst one > stage
+function Get-TaskStages
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [int]$stage,
+        [Parameter (Mandatory)]
+        [Object]$configuration
+    )
+
+    $foundValue=$null
+
+    foreach ($taskStage in $configuration.TaskStages)
+    {
+        # Check if we've found the right one
+        if ($taskstage.StageNumber -eq $stage )
+        {
+            return $taskStage
+        }
+
+        # Otherwise, check if the stage is greater than our tarket
+        elseif ($taskStage.StageNumber -gt $stage)
+        {
+            #If so, check if our current value ($foundValue) is null 
+            if ($foundValue -eq $null)
+            {
+                # If so, stash the current one
+                $foundValue = $taskStage
+            }
+            # Check if the current version is less than the stashed version
+            elseif ($taskStage.StageNumber -lt $foundValue.StageNumber)
+            {
+                # If so, then stash the new one
+                $foundValue = $taskStage                
+            }
+        }
+    }
+    return $foundValue
+}
+
 ### Functions to perform actions
 
 # Windows store updates
 function Update-StoreApps
 {
-	Write-Output "Upgrade all Windows Store apps. Please remember to log into the Windows Store when it opens."
+	Write-Host "Upgrade all Windows Store apps. Please remember to log into the Windows Store when it opens."
     Read-Host -Prompt "Press Enter to start updating apps"
     Start-Process "ms-windows-store://downloadsandupdates"
     Read-Host -Prompt "Press Enter once the apps are updated"
@@ -195,7 +267,8 @@ function Install-WingetPackage
         [string] $Id,
         [string[]] $AdditionalOptions
     )
-    Write-Output "Installing $Id..."
+
+    Write-Host "Installing $Id..."
     winget install --exact $Id $AdditionalOptions
 
 
@@ -216,7 +289,7 @@ function Install-DownloadedFile
 
     $filePath=$env:TEMP + "\" + $fileName
 
-    Write-Output "Downloading $wsl2_kernel"
+    Write-Host "Downloading $wsl2_kernel"
 
     Invoke-WebRequest -Uri $Url -OutFile "$filePath"
 
@@ -522,8 +595,6 @@ else
 
 $Config = Get-Configuration -fileName $ConfigFile
 
-
-
 if ((Get-StatusStage -fileName $tempFile) -eq 0)
 {
     $NeedsReboot=$false
@@ -553,7 +624,7 @@ if ((Get-StatusStage -fileName $tempFile) -eq 0)
             }
         }
     }
-    Set-StatusStage -fileName $tempFile	-stage 1
+    Set-StatusStage -fileName $tempFile -stage 1
 
     if ($NeedsReboot -eq $true)
     {
@@ -569,129 +640,152 @@ if ((Get-StatusStage -fileName $tempFile) -eq 1)
 {
 	start ms-settings:windowsupdate-action
 	
-    Set-StatusStage -fileName $tempFile	-stage 2
+    Set-StatusStage -fileName $tempFile -stage 2
 
-	Write-Output "Please install any windows updates. If you do not need to reboot this device, re-run this script"
+	Write-Host "Please install any windows updates. If you do not need to reboot this device, re-run this script"
 	
     exit
 }
 
-if ($Config.InstallWsl)
+if ((Get-StatusStage -fileName $tempFile) -eq 2)
 {
-    if ($Config.InstallWsl -eq $true)
+    if ($Config.InstallWsl)
     {
-        # WSL2 is only supported on Windows 2004 and later
-        # Since creating this, WSL 2 has been backported to Windows 10 1903, but I can't be bothered setting up the
-        # checks because I don't intend to run older versions of Windows. Feel free to file a PR
-        if ($windowsVersion -ge $windows2004)
+        if ($Config.InstallWsl -eq $true)
         {
+            # WSL2 is only supported on Windows 2004 and later
+            # Since creating this, WSL 2 has been backported to Windows 10 1903, but I can't be bothered setting up the
+            # checks because I don't intend to run older versions of Windows. Feel free to file a PR
+            if ($windowsVersion -ge $windows2004)
+            {
 
-            # the WSL kernel needs to be downlaoded manually for now.
-            # see https://aka.ms/wsl2kernel
+                # the WSL kernel needs to be downlaoded manually for now.
+                # see https://aka.ms/wsl2kernel
 
-            Install-DownloadedFile -Url "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" -AdditionalOptions ("/quiet")
+                Install-DownloadedFile -Url "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" -AdditionalOptions ("/quiet")
 
-            # Set the wsl default version before we begin
-            wsl --set-default-version 2
+                # Set the wsl default version before we begin
+                wsl --set-default-version 2
+            }
         }
+    }
+    Set-StatusStage -fileName $tempFile -stage 3
+}
+
+if ((Get-StatusStage -fileName $tempFile) -eq 3)
+{
+    # Windows store updates page
+    Update-StoreApps
+	
+    Set-StatusStage -fileName $tempFile -stage 4
+}
+
+if ((Get-StatusStage -fileName $tempFile) -eq 4)
+{
+    [int]$nextTaskStage=Get-TaskStage -fileName $tempFile
+
+    $taskStage = Get-TaskStages -stage $nextTaskStage -configuration $Config
+
+    if ($taskStage -eq $null)
+    {
+        Write-Host "End of tasks..."
+        Set-StatusStage -fileName $tempFile -stage 5
+    }
+
+    # do this only if we haven't skipped past
+    if ((Get-StatusStage -fileName $tempFile) -eq 4)
+    {
+        # For Iterate through each task in this list...
+        foreach ($task in $taskStage.tasks)
+        {
+            switch ($task.Type)
+            {
+                # Install a store app
+                "microsoftStore"
+                {
+                    Install-StoreApp -ProductId $task.Id
+                }
+
+                # Install an app through winget
+                "winget"
+                {
+                    if ($type.AdditionalOptions)
+                    {
+                        Install-WingetPackage -Id $task.Id
+                    }
+                    else
+                    {
+                        Install-WingetPackage -Id $task.Id -AdditionalOptions ([string[]] $task.AdditionalOptions)                      
+                    }
+                }
+            }
+        }
+
+        $nextTaskStage = $taskStage.StageNumber + 1
+
+        Set-TaskStage -fileName $tempFile -stage $nextTaskStage
     }
 }
 
-# Windows store updates page
-Update-StoreApps
+if ((Get-StatusStage -fileName $tempFile) -eq 5)
+{
+    # Setup the distro
+    ubuntu
 
-# Install winget
-Install-StoreApp -ProductId 9NBLGGH4NNS1
+    # Fork git client
+    Install-DownloadedFile -Url https://git-fork.com/update/win/ForkInstaller.exe -WaitMessage "Press Enter once Fork has finished installing"
 
-Install-WingetPackage -Id OpenJS.Nodejs
-Install-WingetPackage -Id Microsoft.VisualStudio.Enterprise -AdditionalOptions ("--override", "--passive --wait --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;installOptional --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1")
-Install-WingetPackage -Id Microsoft.VisualStudioCode
+    Set-StatusStage -fileName $tempFile -stage 5
+}
 
-# Install 1Password
-Install-WingetPackage -Id Microsoft.Edge
-Install-WingetPackage -Id AgileBits.1Password
-Install-WingetPackage -Id Microsoft.PowerShell
-Install-WingetPackage -Id Microsoft.PowerToys
+if ((Get-StatusStage -fileName $tempFile) -eq 5)
+{
+    # Office365
 
-Install-StoreApp -ProductId 9N0DX20HK701
+    #https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe
 
-Install-WingetPackage -Id Notepad++.Notepad++
-Install-WingetPackage -Id Git.Git
-Install-WingetPackage -Id PuTTY.PuTTY
-Install-WingetPackage -Id TortoiseGit.TortoiseGit
-Install-WingetPackage -Id vim.vim
-Install-WingetPackage -Id 7zip.7zip
+    $Office365_Deployment=$env:TEMP + "\officedeploymenttool_12827-20268.exe"
+    $Office365_Extract=$env:TEMP + "\officedeploymenttool_12827-20268"
+    $Office365_Tool=$Office365_Extract + "\setup.exe"
+    $Office365_Config_File_Name="Office.xml"
+    $Office365_Config_File=$Office365_Extract + "\" +$Office365_Config_File_Name
 
-Install-WingetPackage -Id SQLiteBrowser.SQLiteBrowser
-Install-WingetPackage -Id Microsoft.AzureDataStudio
+    # Download and extract the Office Deployment tool
+    Install-DownloadedFile -Url "https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe" -AdditionalOptions ("/extract:""$Office365_Extract""","/quiet")
 
-Install-WingetPackage -Id VMware.WorkstationPro
+    # Create the config file
+    Create-OfficeDeploymentConfigurationFile -fileName $Office365_Config_File
+    Add-OfficeConfigurationAttributesToAdd -Attribute OfficeClientEdition -value 64 -FileName $Office365_Config_File
+    Add-OfficeConfigurationAttributesToAdd -Attribute MigrateArch -value True -FileName $Office365_Config_File
+    Add-OfficeConfigurationAttributesToAdd -Attribute OfficeMgmtCOM -value False -FileName $Office365_Config_File
 
-# Install Store stuff that comes with the surface
-# Surface App
-Install-StoreApp -ProductId 9WZDNCRFJB8P
+    Add-OfficeProduct -ProductID O365HomePremRetail -FileName $Office365_Config_File
+    Add-OfficeProductLangage -ProductID O365HomePremRetail -LanguageID MatchOS -FileName $Office365_Config_File
+    Add-OfficeProductLanguageAttribute -ProductID O365HomePremRetail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
+    Add-OfficeProductDisplay -ProductID O365HomePremRetail -FileName $Office365_Config_File
+    Add-OfficeProductDisplayAttribute -ProductID O365HomePremRetail -Attribute Level -Value Full -FileName $Office365_Config_File
+    Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Access -FileName $Office365_Config_File
+    Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID OneNote -FileName $Office365_Config_File
+    Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID OneDrive -FileName $Office365_Config_File
+    Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Outlook -FileName $Office365_Config_File
+    Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Publisher -FileName $Office365_Config_File
 
-# Whiteboard
-Install-StoreApp -ProductId 9MSPC6MP8FM4
+    Add-OfficeProduct -ProductID VisioPro2019Retail -FileName $Office365_Config_File
+    Add-OfficeProductLangage -ProductID VisioPro2019Retail -LanguageID MatchOS -FileName $Office365_Config_File
+    Add-OfficeProductLanguageAttribute -ProductID VisioPro2019Retail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
+    Add-OfficeProductDisplay -ProductID VisioPro2019Retail -FileName $Office365_Config_File
+    Add-OfficeProductDisplayAttribute -ProductID VisioPro2019Retail -Attribute Level -Value Full -FileName $Office365_Config_File
 
-# MPEG2 Video Extensions
-Install-StoreApp -ProductId 9N95Q1ZZPMH4
+    Add-OfficeProduct -ProductID ProjectPro2019Retail -FileName $Office365_Config_File
+    Add-OfficeProductLangage -ProductID ProjectPro2019Retail -LanguageID MatchOS -FileName $Office365_Config_File
+    Add-OfficeProductLanguageAttribute -ProductID ProjectPro2019Retail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
+    Add-OfficeProductDisplay -ProductID ProjectPro2019Retail -FileName $Office365_Config_File
+    Add-OfficeProductDisplayAttribute -ProductID ProjectPro2019Retail -Attribute Level -Value Full -FileName $Office365_Config_File
 
-# HEVC Video Extensions
-Install-StoreApp -ProductId 9NMZLZ57R3T7
+    Write-Host "Installing Office 365"
+    Start-Process "$Office365_Tool" -ArgumentList "/configure ""$Office365_Config_File""" -Wait
 
-#Install-WingetPackage -Id Canonical.Ubuntu
-Install-StoreApp -ProductId 9NBLGGH4MSV6
+    Remove-Item -Path "$Office365_Extract" -Recurse
 
-# Setup the distro
-ubuntu
-
-# Fork git client
-Install-DownloadedFile -Url https://git-fork.com/update/win/ForkInstaller.exe -WaitMessage "Press Enter once Fork has finished installing"
-
-# Office365
-
-#https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe
-
-$Office365_Deployment=$env:TEMP + "\officedeploymenttool_12827-20268.exe"
-$Office365_Extract=$env:TEMP + "\officedeploymenttool_12827-20268"
-$Office365_Tool=$Office365_Extract + "\setup.exe"
-$Office365_Config_File_Name="Office.xml"
-$Office365_Config_File=$Office365_Extract + "\" +$Office365_Config_File_Name
-
-# Download and extract the Office Deployment tool
-Install-DownloadedFile -Url "https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe" -AdditionalOptions ("/extract:""$Office365_Extract""","/quiet")
-
-# Create the config file
-Create-OfficeDeploymentConfigurationFile -fileName $Office365_Config_File
-Add-OfficeConfigurationAttributesToAdd -Attribute OfficeClientEdition -value 64 -FileName $Office365_Config_File
-Add-OfficeConfigurationAttributesToAdd -Attribute MigrateArch -value True -FileName $Office365_Config_File
-Add-OfficeConfigurationAttributesToAdd -Attribute OfficeMgmtCOM -value False -FileName $Office365_Config_File
-
-Add-OfficeProduct -ProductID O365HomePremRetail -FileName $Office365_Config_File
-Add-OfficeProductLangage -ProductID O365HomePremRetail -LanguageID MatchOS -FileName $Office365_Config_File
-Add-OfficeProductLanguageAttribute -ProductID O365HomePremRetail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
-Add-OfficeProductDisplay -ProductID O365HomePremRetail -FileName $Office365_Config_File
-Add-OfficeProductDisplayAttribute -ProductID O365HomePremRetail -Attribute Level -Value Full -FileName $Office365_Config_File
-Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Access -FileName $Office365_Config_File
-Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID OneNote -FileName $Office365_Config_File
-Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID OneDrive -FileName $Office365_Config_File
-Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Outlook -FileName $Office365_Config_File
-Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Publisher -FileName $Office365_Config_File
-
-Add-OfficeProduct -ProductID VisioPro2019Retail -FileName $Office365_Config_File
-Add-OfficeProductLangage -ProductID VisioPro2019Retail -LanguageID MatchOS -FileName $Office365_Config_File
-Add-OfficeProductLanguageAttribute -ProductID VisioPro2019Retail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
-Add-OfficeProductDisplay -ProductID VisioPro2019Retail -FileName $Office365_Config_File
-Add-OfficeProductDisplayAttribute -ProductID VisioPro2019Retail -Attribute Level -Value Full -FileName $Office365_Config_File
-
-Add-OfficeProduct -ProductID ProjectPro2019Retail -FileName $Office365_Config_File
-Add-OfficeProductLangage -ProductID ProjectPro2019Retail -LanguageID MatchOS -FileName $Office365_Config_File
-Add-OfficeProductLanguageAttribute -ProductID ProjectPro2019Retail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
-Add-OfficeProductDisplay -ProductID ProjectPro2019Retail -FileName $Office365_Config_File
-Add-OfficeProductDisplayAttribute -ProductID ProjectPro2019Retail -Attribute Level -Value Full -FileName $Office365_Config_File
-
-Write-Output "Installing Office 365"
-Start-Process "$Office365_Tool" -ArgumentList "/configure ""$Office365_Config_File""" -Wait
-
-Remove-Item -Path "$Office365_Extract" -Recurse
+    Set-StatusStage -fileName $tempFile -stage 6
+}
