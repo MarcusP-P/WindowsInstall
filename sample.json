@@ -4,6 +4,7 @@
 	"TaskStages": [
 		{
 			"StageNumber": 1,
+			"FinishMessage": "Please reboot then re-run script",
 			"Tasks": [
 				{
 					"Type": "microsoftStore",

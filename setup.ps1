@@ -731,6 +731,20 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
         $nextTaskStage = $taskStage.StageNumber + 1
 
         Set-TaskStage -fileName $tempFile -stage $nextTaskStage
+
+        # If we are still in stage 4
+        if ((Get-StatusStage -fileName $tempFile) -eq 4)
+        {
+            if ($taskStage.FinishMessage)
+            {
+                Write-Host $taskStage.FinishMessage
+            }
+            else
+            {
+                Write-Host "Finished task stage $($taskStage.StageNumber). Please restart the script when you are ready to continue."
+            }
+        }
+
     }
 }
 
@@ -742,10 +756,10 @@ if ((Get-StatusStage -fileName $tempFile) -eq 5)
     # Fork git client
     Install-DownloadedFile -Url https://git-fork.com/update/win/ForkInstaller.exe -WaitMessage "Press Enter once Fork has finished installing"
 
-    Set-StatusStage -fileName $tempFile -stage 5
+    Set-StatusStage -fileName $tempFile -stage 6
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 5)
+if ((Get-StatusStage -fileName $tempFile) -eq 6)
 {
     # Office365
 
