@@ -20,7 +20,7 @@ The Configuration is read form a JSON file. Look at Sample.json
 Basic configuration is at the top level:
 * `ComputerName`: [optional] change the name of the computer
 * `InstallWsl`: [optional] a boolean to install WSL. If you are on Windows 2004 or later, it will automatically enable WSL2. Default: `false`
-* `TaskStages`: [optional] an array of stages of tasks stages. At the end of each stage, the script will exit.
+* `TaskStages`: [optional] an array of task stages. At the end of each stage, the script will exit.
 	* `StageNumber`: [required] the number of this stage. 
 		These are executed in ascending numerical order, starting with zero. If there is a missing stage, we will load the next highest number. At the moment, the script processes each script sequentially
 	* `FinishMessage`: [optional] Message to display at the end of the stage, before exiting. If this is missing, a default message will be displayed.
