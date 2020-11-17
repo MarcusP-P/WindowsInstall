@@ -18,24 +18,26 @@ You may also need to run `Unblock-File` against this script
 The Configuration is read form a JSON file. Look at Sample.json
 
 Basic configuration is at the top level:
-* `ComputerName`: change the name of the computer
-* `InstallWsl`: a boolean to install WSL. If you are on Windows 2004 or later, it will automatically enable WSL2. Default: `false`
-* `TaskStages`: an array of stages of tasks:
-	* `StageNumber`: the number of this stage. 
+* `ComputerName`: [optional] change the name of the computer
+* `InstallWsl`: [optional] a boolean to install WSL. If you are on Windows 2004 or later, it will automatically enable WSL2. Default: `false`
+* `TaskStages`: [optional] an array of stages of tasks:
+	* `StageNumber`: [required] the number of this stage. 
 		These are executed in ascending order, starting with zero. If there is a missing stage, we will load the next highest number. At the moment, the script processes each script sequentially
-	* `Tasks`: an array of tasks
-		* `Type`: which can be one of the following:
+	* `Tasks`: [optional] an array of tasks
+		* `Type`: [required] which can be one of the following:
 			* `microsoftStore`: install a Microsoft Store app 
 			* `winget`: install an app using Winget
+		* `Comment`: [optional] this field doesn't affect the script in any way, but can be used to add notes to the configuration file. This field is not used by the script, but will not be used in the future.
 
 		The remaining fields depend on the type:
 
 ### Install Microsoft Store App
-* `Id`: the Microsoft Store Product ID. You can find the product id by using the share link on the store app page
+* `Id`: [required] the Microsoft Store Product ID. You can find the product id by using the share link on the store app page
+* `Text`: [optional] textual description to appear when
 
 ### Install a Winget package
-* `Id`: the Winget package to add. It is installed with `winget -e`, so you need to accurately match the package name
-* `AdditionalOptions`: an array of additional command line parameters to pass to Winget.
+* `Id`: [required] the Winget package to add. It is installed with `winget -e`, so you need to accurately match the package name
+* `AdditionalOptions`: [optional] an array of additional command line parameters to pass to Winget.
 		
 
 ## Todo

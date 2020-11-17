@@ -251,8 +251,15 @@ function Install-StoreApp
     param
     (
         [Parameter (Mandatory)]
-        [string]$ProductId
+        [string]$ProductId,
+        [string]$Text
     )
+
+    if ($text)
+    {
+        Write-Host "Installing $Text"
+    }
+
     # When winget supports Windows Store, update this
     Start-Process "ms-windows-store://pdp/?productId=$ProductID"
     Read-Host -Prompt "Press Enter once the package is installed"
@@ -703,7 +710,7 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
                 # Install a store app
                 "microsoftStore"
                 {
-                    Install-StoreApp -ProductId $task.Id
+                    Install-StoreApp -ProductId $task.Id -Text $task.Text
                 }
 
                 # Install an app through winget

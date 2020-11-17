@@ -7,6 +7,7 @@
 			"Tasks": [
 				{
 					"Type": "microsoftStore",
+					"Text": "App Installer",
 					"Id": "9NBLGGH4NNS1"
 				},
 				{
@@ -43,6 +44,7 @@
 				},
 				{
 					"Type": "microsoftStore",
+					"Text": "Windows Terminal",
 					"Id": "9N0DX20HK701"
 				},
 				{
@@ -83,22 +85,27 @@
 				},
 				{
 					"Type": "microsoftStore",
+					"Text": "Surface",
 					"Id": "9WZDNCRFJB8P"
 				},
 				{
 					"Type": "microsoftStore",
+					"Text": "Microsoft Whiteboard",
 					"Id": "9MSPC6MP8FM4"
 				},
 				{
 					"Type": "microsoftStore",
+					"Text": "MPEG-2 Video Extension",
 					"Id": "9N95Q1ZZPMH4"
 				},
 				{
 					"Type": "microsoftStore",
+					"Text": "HEVC Video Extensions",
 					"Id": "9NMZLZ57R3T7"
 				},
 				{
 					"Type": "microsoftStore",
+					"Text": "Ubuntu",
 					"Id": "9NBLGGH4MSV6"
 				}
 			]
