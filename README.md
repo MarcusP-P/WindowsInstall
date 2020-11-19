@@ -55,6 +55,7 @@ Basic configuration is at the top level:
   * Make this configurable
 * Use the Windows Update PowerShell modules to do the Windows updating
 * Add the ability to include other config files
+* Use splatting to build commandlines
 
 ### Missing bits
 * Auto elevate to Admin
