@@ -20,6 +20,7 @@ You may also need to run `Unblock-File` against this script
 * Create a configuration file, and then call the functions based on lines in the config file
 * Use the Windows Update PowerShell modules to do the Windows updating
 * Add the ability to include other config files
+* Use splatting to build commandlines
 
 ### Missing bits
 * Auto elevate to Admin
