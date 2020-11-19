@@ -109,6 +109,11 @@
 					"Text": "Ubuntu",
 					"Id": "9NBLGGH4MSV6"
 				}
+				{
+					"Type": "exec",
+					"Text": "Setting up Unbuntu",
+					"Executable": "ubuntu"
+				}
 			]
 		}
 	]

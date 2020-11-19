@@ -725,6 +725,15 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
                         Install-WingetPackage -Id $task.Id -AdditionalOptions ([string[]] $task.AdditionalOptions)                      
                     }
                 }
+                # run an execurable
+                "exec"
+                {
+                    if ($task.Text)
+                    {
+                        Write-Host "$($task.Text)"
+                    }
+                    Start-Process "$($task.Executable)" -Wait
+                }
             }
         }
 
@@ -750,8 +759,6 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
 
 if ((Get-StatusStage -fileName $tempFile) -eq 5)
 {
-    # Setup the distro
-    ubuntu
 
     # Fork git client
     Install-DownloadedFile -Url https://git-fork.com/update/win/ForkInstaller.exe -WaitMessage "Press Enter once Fork has finished installing"

@@ -28,6 +28,7 @@ Basic configuration is at the top level:
 		* `Type`: [required] which can be one of the following:
 			* `microsoftStore`: install a Microsoft Store app 
 			* `winget`: install an app using Winget
+			* `exec	: run an executable
 		* `Comment`: [optional] this field doesn't affect the script in any way, but can be used to add notes to the configuration file. This field is not used by the script, but will not be used in the future.
 
 		The remaining fields depend on the type:
@@ -39,7 +40,10 @@ Basic configuration is at the top level:
 ### Install a Winget package
 * `Id`: [required] the Winget package to add. It is installed with `winget -e`, so you need to accurately match the package name
 * `AdditionalOptions`: [optional] an array of additional command line parameters to pass to Winget.
-		
+
+### Run an executable
+* `Executable`: [required] the name of the executable.
+* `Text`: [optional] text to display before starting the executable.
 
 ## Todo
 ### Architecture
