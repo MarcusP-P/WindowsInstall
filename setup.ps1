@@ -1,4 +1,5 @@
 #Requires -RunAsAdministrator
+# Copyright (c) 2020, Marcus Pallinger
 
 # You will need to set the execution policy for scripts
 # for me: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
