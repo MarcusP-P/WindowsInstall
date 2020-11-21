@@ -55,6 +55,7 @@ Basic configuration is at the top level:
 ### Architecture
 * Create function to update Windows
 * Use the configuration file to install Office
+* Use the configuration file to reboot the computer
 * Option to skip Windows Update
 * Install Winget AppX package, rather than making people sign up to AppInstaller Insider
   * Make this configurable
