@@ -716,13 +716,13 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
                 # Install an app through winget
                 "winget"
                 {
-                    if ($type.AdditionalOptions)
+                    if ($task.AdditionalOptions)
                     {
-                        Install-WingetPackage -Id $task.Id
+                        Install-WingetPackage -Id $task.Id -AdditionalOptions ([string[]] $task.AdditionalOptions)
                     }
                     else
                     {
-                        Install-WingetPackage -Id $task.Id -AdditionalOptions ([string[]] $task.AdditionalOptions)                      
+                        Install-WingetPackage -Id $task.Id                      
                     }
                 }
                 # run an execurable
