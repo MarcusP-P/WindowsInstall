@@ -108,11 +108,17 @@
 					"Type": "microsoftStore",
 					"Text": "Ubuntu",
 					"Id": "9NBLGGH4MSV6"
-				}
+				},
 				{
 					"Type": "exec",
 					"Text": "Setting up Unbuntu",
 					"Executable": "ubuntu"
+				},
+				{
+					"Type": "download",
+					"Text": "Installing Fork",
+					"Url": "https://git-fork.com/update/win/ForkInstaller.exe",
+					"WaitMessage": "Press Enter once Fork has finished installing"
 				}
 			]
 		}

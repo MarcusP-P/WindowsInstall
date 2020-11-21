@@ -734,6 +734,22 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
                     }
                     Start-Process "$($task.Executable)" -Wait
                 }
+                # Download and run an executable
+                "download"
+                {
+                    if ($task.Text)
+                    {
+                        Write-Host "$($task.Text)"
+                    }
+                    if ($task.WaitMessage)
+                    {
+                        Install-DownloadedFile -Url "$($task.Url)" -WaitMessage "$($task.WaitMessage)"
+                    }
+                    else
+                    {
+                        Install-DownloadedFile -Url "$($task.Url)"
+                    }
+                }
             }
         }
 

@@ -29,6 +29,7 @@ Basic configuration is at the top level:
 			* `microsoftStore`: install a Microsoft Store app 
 			* `winget`: install an app using Winget
 			* `exec	: run an executable
+			* `download`: Downoad and execute a file
 		* `Comment`: [optional] this field doesn't affect the script in any way, but can be used to add notes to the configuration file. This field is not used by the script, but will not be used in the future.
 
 		The remaining fields depend on the type:
@@ -41,6 +42,11 @@ Basic configuration is at the top level:
 * `Id`: [required] the Winget package to add. It is installed with `winget -e`, so you need to accurately match the package name
 * `AdditionalOptions`: [optional] an array of additional command line parameters to pass to Winget.
 
+### Download and install from a URL
+* `Url`: [required] the full URL of the file to download
+* `Text`: [optional] text to display before the download
+* `WaitMessage`: [optional] display this message to the user and wait for them to press enter after install
+
 ### Run an executable
 * `Executable`: [required] the name of the executable.
 * `Text`: [optional] text to display before starting the executable.
@@ -48,7 +54,6 @@ Basic configuration is at the top level:
 ## Todo
 ### Architecture
 * Create function to update Windows
-* Use the configuration file to install a file from a URL
 * Use the configuration file to install Office
 * Option to skip Windows Update
 * Install Winget AppX package, rather than making people sign up to AppInstaller Insider
