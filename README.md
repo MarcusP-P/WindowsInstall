@@ -29,7 +29,8 @@ Basic configuration is at the top level:
 			* `microsoftStore`: install a Microsoft Store app 
 			* `winget`: install an app using Winget
 			* `exec	: run an executable
-			* `download`: Downoad and execute a file
+			* `download`: downoad and execute a file
+			* `office`: intall Office 2016/2019/365, including customisations
 		* `Comment`: [optional] this field doesn't affect the script in any way, but can be used to add notes to the configuration file. This field is not used by the script, but will not be used in the future.
 
 		The remaining fields depend on the type:
@@ -51,11 +52,34 @@ Basic configuration is at the top level:
 * `Executable`: [required] the name of the executable.
 * `Text`: [optional] text to display before starting the executable.
 
+### Install Office
+The Install Office task allows you to create a customised configuration file and uses the Office Deployment Tool to install it. 
+See the [Configuration options for the Office Deployment Tool](https://docs.microsoft.com/en-us/deployoffice/office-deployment-tool-configuration-options)
+to understand how to use the following options. Fields marked as optional are not required for the script to run, but may be required by the Office 
+Deployment Tool.
+
+* `ConfigurationAttributes`: [optional] an array of attributes to add to the Add element of the configuration file
+	* `Attribute`: [required] the name of the attribute to add
+	* `Value`: [required] the value to add
+* `Products`: [optional] an array of products to install:
+	* `ProductId`: [required] Microsoft's ID for the product to install. Refer to Mictosoft's [list of product IDs](https://docs.microsoft.com/en-au/office365/troubleshoot/installation/product-ids-supported-office-deployment-click-to-run).
+	* `Language`: [optional] create the Language element:
+		* `LanguageId`: [required] use this language
+		* `Attributes`: [optional] an array of attributes for the Language element
+			* `Attribute`: [required] the name of the attribute to add
+			* `Value`: [required] the value to add
+	* `Display`: [optional] create the Display element.
+		* `Attributes`: [optional] an array of attributes for the Dispalay element
+			* `Attribute`: [required] the name of the attribute to add
+			* `Value`: [required] the value to add
+	* `ExcludeComponents`: [optional] an array of strings containing the components to exclude from the office install. 
+	  See [the list](https://docs.microsoft.com/en-us/deployoffice/office-deployment-tool-configuration-options#excludeapp-element) of known exlusions
+
 ## Todo
 ### Architecture
 * Create function to update Windows
-* Use the configuration file to install Office
 * Use the configuration file to reboot the computer
+* By default go to the next task stage unless specicified in the config file
 * Option to skip Windows Update
 * Install Winget AppX package, rather than making people sign up to AppInstaller Insider
   * Make this configurable

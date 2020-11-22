@@ -119,6 +119,107 @@
 					"Text": "Installing Fork",
 					"Url": "https://git-fork.com/update/win/ForkInstaller.exe",
 					"WaitMessage": "Press Enter once Fork has finished installing"
+				},
+				{
+					"Type": "office",
+					"ConfigurationAttributes": 
+					[
+						{
+							"Attribute": "OfficeClientEdition",
+							"Value": "64"
+						},
+						{
+							"Attribute": "MigrateArch",
+							"Value": "True"
+						},
+						{
+							"Attribute": "OfficeMgmtCOM",
+							"Value": "False"
+						}
+					],
+					"Products": 
+					[
+						{
+							"ProductId": "O365HomePremRetail",
+							"Language":
+							{
+								"LanguageId": "MatchOS",
+								"Attributes":
+								[
+									{
+										"Attribute": "Fallback",
+										"Value": "en-us"
+									}
+								]
+							},
+							"Display":
+							{
+								"Attributes":
+								[
+									{
+										"Attribute": "Level",
+										"Value": "Full"
+									}
+								]
+							},
+							"ExcludeComponents":
+							[
+								"Access",
+								"OneNote",
+								"OneDrive",
+								"Outlook",
+								"Publisher"
+							]
+						},
+						{
+							"ProductId": "VisioPro2019Retail",
+							"Language":
+							{
+								"LanguageId": "MatchOS",
+								"Attributes":
+								[
+									{
+										"Attribute": "Fallback",
+										"Value": "en-us"
+									}
+								]
+							},
+							"Display":
+							{
+								"Attributes":
+								[
+									{
+										"Attribute": "Level",
+										"Value": "Full"
+									}
+								]
+							}
+						},
+						{
+							"ProductId": "ProjectPro2019Retail",
+							"Language":
+							{
+								"LanguageId": "MatchOS",
+								"Attributes":
+								[
+									{
+										"Attribute": "Fallback",
+										"Value": "en-us"
+									}
+								]
+							},
+							"Display":
+							{
+								"Attributes":
+								[
+									{
+										"Attribute": "Level",
+										"Value": "Full"
+									}
+								]
+							}
+						}
+					]
 				}
 			]
 		}

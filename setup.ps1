@@ -566,6 +566,77 @@ function Add-OfficeProductExcludeApp
 
 }
 
+# When we get an Office Install, perform the task
+function Install-Office
+{
+    param
+    (
+         [Parameter (Mandatory)]
+         [Object] $OfficeInstallTask
+    )
+    Write-Host "Installing Office..."
+    $Office365_Deployment=$env:TEMP + "\officedeploymenttool_12827-20268.exe"
+    $Office365_Extract=$env:TEMP + "\officedeploymenttool_12827-20268"
+    $Office365_Tool=$Office365_Extract + "\setup.exe"
+    $Office365_Config_File_Name="Office.xml"
+    $Office365_Config_File=$Office365_Extract + "\" +$Office365_Config_File_Name
+
+    # Download and extract the Office Deployment tool
+    Install-DownloadedFile -Url "https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe" -AdditionalOptions ("/extract:""$Office365_Extract""","/quiet")
+
+    # Create the config file
+    Create-OfficeDeploymentConfigurationFile -fileName $Office365_Config_File
+
+    # Add the attributes to the configuration tag
+    foreach ($configuratonAttribute in $OfficeInstallTask.ConfigurationAttributes)
+    {
+        Add-OfficeConfigurationAttributesToAdd -Attribute "$($configuratonAttribute.Attribute)" -value "$($configuratonAttribute.Value)" -FileName $Office365_Config_File
+    }
+
+    # Add the products
+    foreach ($product in $OfficeInstallTask.Products)
+    {
+        Add-OfficeProduct -ProductID "$($product.ProductId)" -FileName $Office365_Config_File
+
+        # Add the language
+        if ($product.Language)
+        {
+            $language=$product.Language
+            Add-OfficeProductLangage -ProductID "$($product.ProductId)" -LanguageID "$($language.LanguageId)" -FileName $Office365_Config_File
+
+            foreach ($languageAttribute in $language.Attributes)
+            {
+                Add-OfficeProductLanguageAttribute -ProductID "$($product.ProductId)" -LanguageID MatchOS -Attribute "$($languageAttribute.Attribute)" -Value "$($languageAttribute.Value)" -FileName $Office365_Config_File
+            }
+        }
+
+        # Add the Display
+        if ($product.Display)
+        {
+            $display=$product.Display
+            Add-OfficeProductDisplay -ProductID "$($product.ProductId)" -FileName $Office365_Config_File
+
+            foreach ($displayAttribute in $display.Attributes)
+            {
+                Add-OfficeProductDisplayAttribute -ProductID "$($product.ProductId)" -Attribute "$($displayAttribute.Attribute)" -Value "$($displayAttribute.Value)" -FileName $Office365_Config_File
+            }
+        }
+
+        # Exclude selected products
+        foreach ($exclusion in $product.ExcludeComponents)
+        {
+            Add-OfficeProductExcludeApp -ProductID "$($product.ProductId)" -ExcludeAppID "$exclusion" -FileName $Office365_Config_File
+        }
+    }
+
+    Write-Host "Installing Office 365"
+    Start-Process "$Office365_Tool" -ArgumentList "/configure ""$Office365_Config_File""" -Wait
+
+    Remove-Item -Path "$Office365_Extract" -Recurse
+
+}
+    
+
 ##### Start of commands...
 
 ### Make sure the config file exists and is setup
@@ -751,6 +822,11 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
                         Install-DownloadedFile -Url "$($task.Url)"
                     }
                 }
+                # Install Office 2016/2019/365
+                "office"
+                {
+                    Install-Office -OfficeInstallTask $task
+                }
             }
         }
 
@@ -772,56 +848,4 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
         }
 
     }
-}
-
-if ((Get-StatusStage -fileName $tempFile) -eq 5)
-{
-    # Office365
-
-    #https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe
-
-    $Office365_Deployment=$env:TEMP + "\officedeploymenttool_12827-20268.exe"
-    $Office365_Extract=$env:TEMP + "\officedeploymenttool_12827-20268"
-    $Office365_Tool=$Office365_Extract + "\setup.exe"
-    $Office365_Config_File_Name="Office.xml"
-    $Office365_Config_File=$Office365_Extract + "\" +$Office365_Config_File_Name
-
-    # Download and extract the Office Deployment tool
-    Install-DownloadedFile -Url "https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe" -AdditionalOptions ("/extract:""$Office365_Extract""","/quiet")
-
-    # Create the config file
-    Create-OfficeDeploymentConfigurationFile -fileName $Office365_Config_File
-    Add-OfficeConfigurationAttributesToAdd -Attribute OfficeClientEdition -value 64 -FileName $Office365_Config_File
-    Add-OfficeConfigurationAttributesToAdd -Attribute MigrateArch -value True -FileName $Office365_Config_File
-    Add-OfficeConfigurationAttributesToAdd -Attribute OfficeMgmtCOM -value False -FileName $Office365_Config_File
-
-    Add-OfficeProduct -ProductID O365HomePremRetail -FileName $Office365_Config_File
-    Add-OfficeProductLangage -ProductID O365HomePremRetail -LanguageID MatchOS -FileName $Office365_Config_File
-    Add-OfficeProductLanguageAttribute -ProductID O365HomePremRetail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
-    Add-OfficeProductDisplay -ProductID O365HomePremRetail -FileName $Office365_Config_File
-    Add-OfficeProductDisplayAttribute -ProductID O365HomePremRetail -Attribute Level -Value Full -FileName $Office365_Config_File
-    Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Access -FileName $Office365_Config_File
-    Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID OneNote -FileName $Office365_Config_File
-    Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID OneDrive -FileName $Office365_Config_File
-    Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Outlook -FileName $Office365_Config_File
-    Add-OfficeProductExcludeApp -ProductID O365HomePremRetail -ExcludeAppID Publisher -FileName $Office365_Config_File
-
-    Add-OfficeProduct -ProductID VisioPro2019Retail -FileName $Office365_Config_File
-    Add-OfficeProductLangage -ProductID VisioPro2019Retail -LanguageID MatchOS -FileName $Office365_Config_File
-    Add-OfficeProductLanguageAttribute -ProductID VisioPro2019Retail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
-    Add-OfficeProductDisplay -ProductID VisioPro2019Retail -FileName $Office365_Config_File
-    Add-OfficeProductDisplayAttribute -ProductID VisioPro2019Retail -Attribute Level -Value Full -FileName $Office365_Config_File
-
-    Add-OfficeProduct -ProductID ProjectPro2019Retail -FileName $Office365_Config_File
-    Add-OfficeProductLangage -ProductID ProjectPro2019Retail -LanguageID MatchOS -FileName $Office365_Config_File
-    Add-OfficeProductLanguageAttribute -ProductID ProjectPro2019Retail -LanguageID MatchOS -Attribute Fallback -Value en-us -FileName $Office365_Config_File
-    Add-OfficeProductDisplay -ProductID ProjectPro2019Retail -FileName $Office365_Config_File
-    Add-OfficeProductDisplayAttribute -ProductID ProjectPro2019Retail -Attribute Level -Value Full -FileName $Office365_Config_File
-
-    Write-Host "Installing Office 365"
-    Start-Process "$Office365_Tool" -ArgumentList "/configure ""$Office365_Config_File""" -Wait
-
-    Remove-Item -Path "$Office365_Extract" -Recurse
-
-    Set-StatusStage -fileName $tempFile -stage 6
 }
