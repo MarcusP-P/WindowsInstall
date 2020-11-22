@@ -776,15 +776,6 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
 
 if ((Get-StatusStage -fileName $tempFile) -eq 5)
 {
-
-    # Fork git client
-    Install-DownloadedFile -Url https://git-fork.com/update/win/ForkInstaller.exe -WaitMessage "Press Enter once Fork has finished installing"
-
-    Set-StatusStage -fileName $tempFile -stage 6
-}
-
-if ((Get-StatusStage -fileName $tempFile) -eq 6)
-{
     # Office365
 
     #https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_12827-20268.exe
