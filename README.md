@@ -86,6 +86,9 @@ Deployment Tool.
 * Use the Windows Update PowerShell modules to do the Windows updating
 * Add the ability to include other config files
 * Use splatting to build command lines
+* Add strictness checks
+* Add error checking
+* Add minimum and maximum Windows version numbers to installers
 
 ### Missing bits
 * Auto elevate to Admin
