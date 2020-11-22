@@ -24,6 +24,7 @@ You may also need to run `Unblock-File` against this script
 
 ### Missing bits
 * Auto elevate to Admin
+* If no file is passed on the command line, use a windows file picker to select it. [Example of using a WinForms File Open dialog in PowerShell][1], [Example of using WPF File Open][2]
 * While doing rebooting, re-start script on login automatically
 * Do upgrades before WSL to allow for an update to a more recent version of Windows
 * Check requirements before installing items (e.g. Terminal)
@@ -48,3 +49,6 @@ You may also need to run `Unblock-File` against this script
 * Add Terminal configuration
 	* Include PowerLine
 * Configure Powershell
+
+[1]: https://4sysops.com/archives/how-to-create-an-open-file-folder-dialog-box-with-powershell/
+[2]: https://www.c-sharpcorner.com/uploadfile/mahesh/openfiledialog-in-wpf/
