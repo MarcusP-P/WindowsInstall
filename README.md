@@ -23,7 +23,12 @@ Basic configuration is at the top level:
 * `TaskStages`: [optional] an array of task stages. At the end of each stage, the script will exit.
 	* `StageNumber`: [required] the number of this stage. 
 		These are executed in ascending numerical order, starting with zero. If there is a missing stage, we will load the next highest number. At the moment, the script processes each script sequentially
-	* `FinishMessage`: [optional] Message to display at the end of the stage, before exiting. If this is missing, a default message will be displayed.
+	* `StartMessage`: [optional] a message to display at the start of this stage
+	* `FinishMessage`: [optional] Message to display at the end of the stage. If this is missing, a default message will be displayed.
+	* `FinishAction`: [optional] actions to take at the end of the set of stages. If not specified, `continue` is assumed.
+		* `reboot`: Reboot at the end of the stage, after the user has hit enter
+		* `exit`: Exit the script. It will need to be re-started manually
+		* `continue`: continue onto the next stage
 	* `Tasks`: [optional] an array of tasks
 		* `Type`: [required] which can be one of the following:
 			* `microsoftStore`: install a Microsoft Store app 
@@ -78,8 +83,6 @@ Deployment Tool.
 ## Todo
 ### Architecture
 * Create function to update Windows
-* Use the configuration file to reboot the computer
-* By default go to the next task stage unless specicified in the config file
 * Option to skip Windows Update
 * Install Winget AppX package, rather than making people sign up to AppInstaller Insider
   * Make this configurable

@@ -759,7 +759,7 @@ if ((Get-StatusStage -fileName $tempFile) -eq 3)
     Set-StatusStage -fileName $tempFile -stage 4
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 4)
+while ((Get-StatusStage -fileName $tempFile) -eq 4)
 {
     [int]$nextTaskStage=Get-TaskStage -fileName $tempFile
 
@@ -770,6 +770,14 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
         Write-Host "End of tasks..."
         Set-StatusStage -fileName $tempFile -stage 5
     }
+
+    Write-Host "Starting stage $($taskStage.StageNumber)."
+
+    if ($taskStage.StartMessage)
+    {
+        Write-Host "$($taskStage.StartMessage)"
+    }
+
 
     # do this only if we haven't skipped past
     if ((Get-StatusStage -fileName $tempFile) -eq 4)
@@ -843,9 +851,29 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
             }
             else
             {
-                Write-Host "Finished task stage $($taskStage.StageNumber). Please restart the script when you are ready to continue."
+                Write-Host "Finished task stage $($taskStage.StageNumber)."
+            }
+
+            # If the stage does not have a finish action, we tret is as continue
+            if ($taskStage.FinishAction)
+            {
+                switch ($taskStage.FinishAction)
+                {
+                    "reboot"
+                    {
+                        Read-Host -Prompt "Press Enter to reboot"
+
+                        shutdown /r /f /t 0
+
+                        exit
+                    }
+                    "exit"
+                    {
+                        Read-Host -Prompt "Press Enter to exit the script. You will need to re-run the script."
+                        exit
+                    }
+                }
             }
         }
-
     }
 }

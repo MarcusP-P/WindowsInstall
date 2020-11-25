@@ -4,13 +4,24 @@
 	"TaskStages": [
 		{
 			"StageNumber": 1,
-			"FinishMessage": "Please reboot then re-run script",
+			"FinishAction": "exit",
+			"FinishMessage": "Please ensure that winget is installed",
+			"StartMessage": "Settingup Winget",
 			"Tasks": [
 				{
 					"Type": "microsoftStore",
 					"Text": "App Installer",
 					"Id": "9NBLGGH4NNS1"
-				},
+				}
+			]
+		},
+		{
+			"StageNumber": 2,
+			"StartMessage": "Installing developemnt tools",
+			"FinishAction": "continue",
+			"FinishMessage": Completed dev tools",
+			"Tasks": [
+
 				{
 					"Type": "winget",
 					"Id": "OpenJS.Nodejs"
@@ -29,11 +40,32 @@
 				},
 				{
 					"Type": "winget",
-					"Id": "Microsoft.Edge"
+					"Id": "Git.Git"
 				},
 				{
 					"Type": "winget",
-					"Id": "AgileBits.1Password"
+					"Id": "SQLiteBrowser.SQLiteBrowser"
+				},
+				{
+					"Type": "winget",
+					"Id": "Microsoft.AzureDataStudio"
+				},
+				{
+					"Type": "download",
+					"Text": "Installing Fork",
+					"Url": "https://git-fork.com/update/win/ForkInstaller.exe",
+					"WaitMessage": "Press Enter once Fork has finished installing"
+				}
+			]
+		},
+		{
+			"StageNumber": 3,
+			"StartMessage": "Installing utilities",
+			"FinishAction": "continue",
+			"Tasks": [
+				{
+					"Type": "winget",
+					"Id": "Microsoft.Edge"
 				},
 				{
 					"Type": "winget",
@@ -54,10 +86,6 @@
 				},
 				{
 					"Type": "winget",
-					"Id": "Git.Git"
-				},
-				{
-					"Type": "winget",
 					"Id": "PuTTY.PuTTY"
 				},
 				{
@@ -74,16 +102,15 @@
 				},				
 				{
 					"Type": "winget",
-					"Id": "SQLiteBrowser.SQLiteBrowser"
-				},
-				{
-					"Type": "winget",
-					"Id": "Microsoft.AzureDataStudio"
-				},
-				{
-					"Type": "winget",
 					"Id": "VMware.WorkstationPro"
-				},
+				}
+			]
+		},
+		{
+			"StageNumber": 4,
+			"StartMessage": "Surface Pro 7 stuff",
+			"FinishAction": "continue",
+			"Tasks": [
 				{
 					"Type": "microsoftStore",
 					"Text": "Surface",
@@ -103,7 +130,14 @@
 					"Type": "microsoftStore",
 					"Text": "HEVC Video Extensions",
 					"Id": "9NMZLZ57R3T7"
-				},
+				}
+			]
+		},
+		{
+			"StageNumber": 5,
+			"StartMessage": "Installing Ubuntu",
+			"FinishAction": "continue",
+			"Tasks": [
 				{
 					"Type": "microsoftStore",
 					"Text": "Ubuntu",
@@ -113,13 +147,14 @@
 					"Type": "exec",
 					"Text": "Setting up Unbuntu",
 					"Executable": "ubuntu"
-				},
-				{
-					"Type": "download",
-					"Text": "Installing Fork",
-					"Url": "https://git-fork.com/update/win/ForkInstaller.exe",
-					"WaitMessage": "Press Enter once Fork has finished installing"
-				},
+				}
+			]
+		},
+		{
+			"StageNumber": 6,
+			"StartMessage": "Finally Office...",
+			"FinishAction": "continue",
+			"Tasks": [
 				{
 					"Type": "office",
 					"ConfigurationAttributes": 
