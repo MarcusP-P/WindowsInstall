@@ -19,7 +19,7 @@
 			"StageNumber": 2,
 			"StartMessage": "Installing developemnt tools",
 			"FinishAction": "continue",
-			"FinishMessage": Completed dev tools",
+			"FinishMessage": "Completed dev tools",
 			"Tasks": [
 
 				{
