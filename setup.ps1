@@ -10,6 +10,9 @@ param
     [string] $ConfigFile
 )
 
+# the progress bar slows down downloads
+$ProgressPreference = 'SilentlyContinue'
+
 # The buildnumber of this version of Windows
 $WindowsVersion=[long]::Parse((Get-WmiObject Win32_OperatingSystem).BuildNumber)
 
