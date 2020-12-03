@@ -106,7 +106,6 @@ Deployment Tool.
 * Check if Winget is installed
 * Display the TaskStage number
 * Install latest version of Windows
-* Create script to dump a computer's setup
 
 ### Features
 * Uninstall included Windows Installer apps
