@@ -33,8 +33,10 @@ Basic configuration is at the top level:
 		* `Type`: [required] which can be one of the following:
 			* `microsoftStore`: install a Microsoft Store app 
 			* `winget`: install an app using Winget
+			* `download`: downoad and execute an installer
 			* `exec	: run an executable
-			* `download`: downoad and execute a file
+			* `addWindowsFeature`: add a Windows feature
+			* `removeWindowsFeature`: remove a Windows feature
 			* `office`: intall Office 2016/2019/365, including customisations
 		* `Comment`: [optional] this field doesn't affect the script in any way, but can be used to add notes to the configuration file. This field is not used by the script, but will not be used in the future.
 
@@ -42,7 +44,7 @@ Basic configuration is at the top level:
 
 ### Install Microsoft Store App
 * `Id`: [required] the Microsoft Store Product ID. You can find the product id by using the share link on the store app page
-* `Text`: [optional] textual description to appear when
+* `Text`: [optional] textual description to appear before installing
 
 ### Install a Winget package
 * `Id`: [required] the Winget package to add. It is installed with `winget -e`, so you need to accurately match the package name
@@ -56,6 +58,16 @@ Basic configuration is at the top level:
 ### Run an executable
 * `Executable`: [required] the name of the executable.
 * `Text`: [optional] text to display before starting the executable.
+
+### Add a Windows feature
+If the installation of the feature requires a reboot, the script will reboot at the end of the stage, overwriting the FinishAction for the stage.
+
+* `Feature`: [required] the name of the feature to install
+
+### Remove a Windows feature
+If the removal of the feature requires a reboot, the script will reboot at the end of the stage, overwriting the FinishAction for the stage.
+
+* `Feature`: [required] the name of the feature to uninstall
 
 ### Install Office
 The Install Office task allows you to create a customised configuration file and uses the Office Deployment Tool to install it. 
@@ -92,8 +104,6 @@ Deployment Tool.
 * Add strictness checks
 * Add error checking
 * Add minimum and maximum Windows version numbers to installers
-* Install/Uninstall Windows Features
-* Change WSL Setup to use the Install/Uninstall infrastructure
 * Install from Zipfile (e.g. OpenDBDiff)
 * Install/uninstall Wondows Capabilities
 * Install/Uninstall Windows Packages

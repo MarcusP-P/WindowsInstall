@@ -21,7 +21,14 @@
 			"FinishAction": "continue",
 			"FinishMessage": "Completed dev tools",
 			"Tasks": [
-
+				{
+					"Type": "addWindowsFeature",
+					"Feature": "TelnetClient"
+				},
+				{
+					"Type": "removeWindowsFeature",
+					"Feature": "Internet-Explorer-Optional-amd64"
+				},
 				{
 					"Type": "winget",
 					"Id": "OpenJS.Nodejs"

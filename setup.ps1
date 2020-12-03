@@ -321,6 +321,35 @@ function Install-DownloadedFile
     Remove-Item -Path "$filePath"
 }
 
+function Install-WindowsFeature
+{
+    param
+    (
+         [Parameter (Mandatory)]
+         [string] $Feature
+    )
+
+    $Result = Enable-WindowsOptionalFeature -FeatureName $Feature -Online  -All -NoRestart
+    if ($Result.RestartNeeded -eq $true)
+    {
+        return $True
+    }
+}
+
+function Remove-WindowsFeature
+{
+    param
+    (
+         [Parameter (Mandatory)]
+         [string] $Feature
+    )
+
+    $Result = Disable-WindowsOptionalFeature -FeatureName $Feature -Online  -Remove -NoRestart
+    if ($Result.RestartNeeded -eq $true)
+    {
+        return $True
+    }
+}
 
 # Create an Office Deployment Tool XML File
 function Create-OfficeDeploymentConfigurationFile
@@ -558,7 +587,7 @@ function Add-OfficeProductExcludeApp
 
     $ExcludeIdAttribute=$ConfigurationFile.CreateAttribute("ID")
     $ExcludeIdAttribute.Value=$ExcludeAppID
-
+        
     $ExcludeApp.Attributes.Append($ExcludeIdAttribute) | Out-Null
 
 
@@ -693,14 +722,14 @@ if ((Get-StatusStage -fileName $tempFile) -eq 0)
     {
         if ($Config.InstallWsl -eq $true)
         {
-            $Result = Enable-WindowsOptionalFeature -FeatureName Microsoft-Windows-Subsystem-Linux -Online  -All -NoRestart
-            if ($Result.RestartNeeded -eq $true)
+            $Result = Install-WindowsFeature -Feature Microsoft-Windows-Subsystem-Linux
+            if ($Result -eq $true)
             {
                 $NeedsReboot = $True
             }
 
-            $Result = Enable-WindowsOptionalFeature -FeatureName VirtualMachinePlatform -Online  -All -NoRestart
-            if ($Result.RestartNeeded -eq $true)
+            $Result = Enable-WindowsOptionalFeature -Feature VirtualMachinePlatform
+            if ($Result -eq $true)
             {
                 $NeedsReboot = $True
             }
@@ -781,10 +810,11 @@ while ((Get-StatusStage -fileName $tempFile) -eq 4)
         Write-Host "$($taskStage.StartMessage)"
     }
 
-
     # do this only if we haven't skipped past
     if ((Get-StatusStage -fileName $tempFile) -eq 4)
     {
+        $NeedsReboot = $false
+
         # For Iterate through each task in this list...
         foreach ($task in $taskStage.tasks)
         {
@@ -833,6 +863,28 @@ while ((Get-StatusStage -fileName $tempFile) -eq 4)
                         Install-DownloadedFile -Url "$($task.Url)"
                     }
                 }
+                # Install a Windows Feature
+                "addWindowsFeature"
+                {
+                    Write-Host "Installing $($task.Feature)..."
+                    $Result=Install-WindowsFeature -Feature "$($task.Feature)"
+
+                    if ($Result -eq $true)
+                    {
+                        $NeedsReboot = $True
+                    }
+                }
+                # Install a Windows Feature
+                "removeWindowsFeature"
+                {
+                    Write-Host "Installing $($task.Feature)..."
+                    $Result=Remove-WindowsFeature -Feature "$($task.Feature)"
+
+                    if ($Result -eq $true)
+                    {
+                        $NeedsReboot = $True
+                    }
+                }
                 # Install Office 2016/2019/365
                 "office"
                 {
@@ -876,6 +928,16 @@ while ((Get-StatusStage -fileName $tempFile) -eq 4)
                         exit
                     }
                 }
+            }
+
+            # If we need a reboot
+            if ($NeedsReboot)
+            {
+                Read-Host -Prompt "Press Enter to reboot"
+
+                shutdown /r /f /t 0
+
+                exit
             }
         }
     }
