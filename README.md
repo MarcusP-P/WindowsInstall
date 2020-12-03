@@ -92,6 +92,10 @@ Deployment Tool.
 * Add strictness checks
 * Add error checking
 * Add minimum and maximum Windows version numbers to installers
+* Install/Uninstall Windows Features
+* Change WSL Setup to use the Install/Uninstall infrastructure
+* Install from Zipfile (e.g. OpenDBDiff)
+* Install/uninstall Wondows Capabilities
 
 ### Missing bits
 * Auto elevate to Admin
@@ -102,6 +106,7 @@ Deployment Tool.
 * Check if Winget is installed
 * Display the TaskStage number
 * Install latest version of Windows
+* Create script to dump a computer's setup
 
 ### Features
 * Uninstall included Windows Installer apps
