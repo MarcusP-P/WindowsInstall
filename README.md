@@ -96,6 +96,7 @@ Deployment Tool.
 * Change WSL Setup to use the Install/Uninstall infrastructure
 * Install from Zipfile (e.g. OpenDBDiff)
 * Install/uninstall Wondows Capabilities
+* Install/Uninstall Windows Packages
 
 ### Missing bits
 * Auto elevate to Admin
