@@ -728,7 +728,7 @@ if ((Get-StatusStage -fileName $tempFile) -eq 0)
                 $NeedsReboot = $True
             }
 
-            $Result = Enable-WindowsOptionalFeature -Feature VirtualMachinePlatform
+            $Result = Install-WindowsFeature -Feature VirtualMachinePlatform
             if ($Result -eq $true)
             {
                 $NeedsReboot = $True
