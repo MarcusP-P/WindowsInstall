@@ -94,19 +94,19 @@ Deployment Tool.
 
 ## Todo
 ### Architecture
-* Create function to update Windows
 * Option to skip Windows Update
 * Install Winget AppX package, rather than making people sign up to AppInstaller Insider
   * Make this configurable
-* Use the Windows Update PowerShell modules to do the Windows updating
 * Add the ability to include other config files
 * Use splatting to build command lines
 * Add strictness checks
 * Add error checking
-* Add minimum and maximum Windows version numbers to installers
+* Add minimum and maximum Windows version numbers to tasks
 * Install from Zipfile (e.g. OpenDBDiff)
 * Install/uninstall Wondows Capabilities
 * Install/Uninstall Windows Packages
+* Move Hiding of Windows Updates to Configuration file
+* Make sure we get all of the updates
 
 ### Missing bits
 * Auto elevate to Admin
@@ -124,6 +124,7 @@ Deployment Tool.
 * Add option to prompt for computer name
 * Add Visual Studio Extenstions
 * Add VS Code Extensions
+* Add AppX installer
 
 ### Configuration
 * Configure WSL environment (.profile)

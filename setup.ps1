@@ -249,6 +249,54 @@ function Update-StoreApps
 
 }
 
+# Install Windows Updates
+# Returns true if updates are installed, false if none found
+function Install-WindowsUpdates
+{
+    Write-Host "Searching for Windows Updates..."
+
+    $updates=Get-WindowsUpdate -MicrosoftUpdate  
+
+    if ($updates.Count -eq 0)
+    {
+        Write-Host "No updates found..."
+        return $false
+    }
+
+
+    $updates | select KB,Size,Title | Tee-Object -Variable "updates" | Format-Table | Out-String | % {Write-Host $_}
+
+    Write-Host "Installing Windows Updates. Please be patient, this may take some time..."
+
+    Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Install
+
+
+    Write-Host "Finished Install of Windows updates"
+
+    return $true
+}
+
+# Hide windows updates
+function Hide-WindowsUpdates
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$IgnoreTitle
+    )
+
+    Write-Host "Hiding $IgnoreTitle..."
+
+    $removedItems = Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Title $IgnoreTitle -Hide
+
+    while ($removedItems.Count -ne 0)
+    {
+        Write-Host "Removed $($removedItems.Title)"
+
+        $removedItems = Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Title $IgnoreTitle -Hide
+    }
+}
+
 # Install a windows store app
 function Install-StoreApp
 {
@@ -708,6 +756,11 @@ $Config = Get-Configuration -fileName $ConfigFile
 
 if ((Get-StatusStage -fileName $tempFile) -eq 0)
 {
+    # Install PowerShell Windows Update
+    Write-Host "Installing PSWindowsUpdate..."
+    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.208 -Force
+    Install-Module -Name PSWindowsUpdate -Force
+
     $NeedsReboot=$false
     if ($Config.ComputerName)
     {
@@ -749,16 +802,25 @@ if ((Get-StatusStage -fileName $tempFile) -eq 0)
 
 if ((Get-StatusStage -fileName $tempFile) -eq 1)
 {
-	start ms-settings:windowsupdate-action
-	
-    Set-StatusStage -fileName $tempFile -stage 2
 
-	Write-Host "Please install any windows updates. If you do not need to reboot this device, re-run this script"
-	
-    exit
+    Hide-WindowsUpdates -IgnoreTitle Silverlight
+    Hide-WindowsUpdates -IgnoreTitle Preview
+
+    Set-StatusStage -fileName $tempFile -stage 2
 }
 
 if ((Get-StatusStage -fileName $tempFile) -eq 2)
+{
+    while (Install-WindowsUpdates)
+    {
+
+    }
+
+    Set-StatusStage -fileName $tempFile -stage 3
+}
+
+
+if ((Get-StatusStage -fileName $tempFile) -eq 3)
 {
     if ($Config.InstallWsl)
     {
@@ -780,18 +842,18 @@ if ((Get-StatusStage -fileName $tempFile) -eq 2)
             }
         }
     }
-    Set-StatusStage -fileName $tempFile -stage 3
+    Set-StatusStage -fileName $tempFile -stage 4
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 3)
+if ((Get-StatusStage -fileName $tempFile) -eq 4)
 {
     # Windows store updates page
     Update-StoreApps
 	
-    Set-StatusStage -fileName $tempFile -stage 4
+    Set-StatusStage -fileName $tempFile -stage 5
 }
 
-while ((Get-StatusStage -fileName $tempFile) -eq 4)
+while ((Get-StatusStage -fileName $tempFile) -eq 5)
 {
     [int]$nextTaskStage=Get-TaskStage -fileName $tempFile
 
@@ -800,7 +862,7 @@ while ((Get-StatusStage -fileName $tempFile) -eq 4)
     if ($taskStage -eq $null)
     {
         Write-Host "End of tasks..."
-        Set-StatusStage -fileName $tempFile -stage 5
+        Set-StatusStage -fileName $tempFile -stage 6
     }
 
     Write-Host "Starting stage $($taskStage.StageNumber)."
@@ -811,7 +873,7 @@ while ((Get-StatusStage -fileName $tempFile) -eq 4)
     }
 
     # do this only if we haven't skipped past
-    if ((Get-StatusStage -fileName $tempFile) -eq 4)
+    if ((Get-StatusStage -fileName $tempFile) -eq 5)
     {
         $NeedsReboot = $false
 
@@ -897,8 +959,8 @@ while ((Get-StatusStage -fileName $tempFile) -eq 4)
 
         Set-TaskStage -fileName $tempFile -stage $nextTaskStage
 
-        # If we are still in stage 4
-        if ((Get-StatusStage -fileName $tempFile) -eq 4)
+        # If we are still in stage 5
+        if ((Get-StatusStage -fileName $tempFile) -eq 5)
         {
             if ($taskStage.FinishMessage)
             {
