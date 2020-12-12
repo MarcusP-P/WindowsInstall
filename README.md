@@ -123,6 +123,7 @@ Deployment Tool.
 * Add option to prompt for computer name
 * Add Visual Studio Extenstions
 * Add VS Code Extensions
+* Execute commands under WSL
 * Add AppX installer
 
 ### Configuration
