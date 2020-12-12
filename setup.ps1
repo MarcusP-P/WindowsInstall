@@ -955,7 +955,7 @@ while ((Get-StatusStage -fileName $tempFile) -eq 5)
                 # Install a Windows Feature
                 "addWindowsFeature"
                 {
-                    Write-Host "Installing $($task.Feature)..."
+                    Write-Host "Installing Windows Feature $($task.Feature)..."
                     $Result=Install-WindowsFeature -Feature "$($task.Feature)"
 
                     if ($Result -eq $true)
@@ -966,7 +966,7 @@ while ((Get-StatusStage -fileName $tempFile) -eq 5)
                 # Install a Windows Feature
                 "removeWindowsFeature"
                 {
-                    Write-Host "Installing $($task.Feature)..."
+                    Write-Host "Removing Windows Feature: $($task.Feature)..."
                     $Result=Remove-WindowsFeature -Feature "$($task.Feature)"
 
                     if ($Result -eq $true)
