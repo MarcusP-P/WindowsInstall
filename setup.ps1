@@ -741,7 +741,18 @@ if ((Get-StatusStage -fileName $tempFile) -eq 0)
 {
     if (! $ConfigFile)
     {
-        Write-Error "Configuration file not specified" -ErrorAction Stop
+        Add-Type -AssemblyName PresentationFramework
+         $FileBrowser = New-Object Microsoft.Win32.OpenFileDialog -Property @{
+            DefaultExt="*.json"; 
+            Filter = "JSON documents (.json)|*.json"; 
+            InitialDirectory = "$PWD"
+        }
+        $FileBrowserResult = $FileBrowser.ShowDialog()
+        if ($FileBrowserResult -ne $true)
+        {
+            Write-Error "You need to select a configuration file." -ErrorAction Stop
+        }
+        $ConfigFile = $FileBrowser.FileName
     }
 
     if (!(Test-Path $ConfigFile -PathType leaf))
