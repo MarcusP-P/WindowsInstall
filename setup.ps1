@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 # Copyright (c) 2020, Marcus Pallinger
 
 # You will need to set the execution policy for scripts
@@ -9,6 +8,23 @@ param
 (
     [string] $ConfigFile
 )
+
+# Self-elevate the script if required
+if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) 
+{
+    try
+    {
+        $CommandLine = "-NoExit -Command Set-Location `"$PWD`"; `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.BoundParameters.Values + $MyInvocation.UnboundArguments
+        Write-Host $CommandLine
+        Start-Process -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine
+        Exit
+    }
+    catch
+    {
+        Write-Host "Could not elevate to administrator. Please re run this from an Admin Powershell"
+        Exit
+    }
+}
 
 # the progress bar slows down downloads
 $ProgressPreference = 'SilentlyContinue'

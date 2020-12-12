@@ -109,7 +109,6 @@ Deployment Tool.
 * Make sure we get all of the updates
 
 ### Missing bits
-* Auto elevate to Admin
 * If no file is passed on the command line, use a windows file picker to select it. [Example of using a WinForms File Open dialog in PowerShell][1], [Example of using WPF File Open][2]
 * While doing rebooting, re-start script on login automatically
 * Do upgrades before WSL to allow for an update to a more recent version of Windows
