@@ -15,7 +15,6 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     try
     {
         $CommandLine = "-NoExit -Command Set-Location `"$PWD`"; `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.BoundParameters.Values + $MyInvocation.UnboundArguments
-        Write-Host $CommandLine
         Start-Process -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine
         Exit
     }
@@ -736,7 +735,7 @@ function Install-Office
 ##### Start of commands...
 
 ### Make sure the config file exists and is setup
-# We only watn the user to pass the config filename on the command line
+# We only want the user to pass the config filename on the command line
 if ((Get-StatusStage -fileName $tempFile) -eq 0)
 {
     if (! $ConfigFile)
