@@ -43,6 +43,7 @@ $windows1703=15063
 
 $tempFile=$env:TEMP + "\Status.json"
 
+$startupFile=Join-Path -Path $([System.Environment]::GetFolderPath("Startup")) -ChildPath "WinstallStartup.cmd"
 
 if ($windowsVersion -lt $windows1703)
 {
@@ -282,6 +283,7 @@ function Install-WindowsUpdates
     $updates | select KB,Size,Title | Tee-Object -Variable "updates" | Format-Table | Out-String | % {Write-Host $_}
 
     Write-Host "Installing Windows Updates. Please be patient, this may take some time..."
+    Write-Host "After installing the update, the script may not re-start."
 
     Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Install
 
@@ -782,6 +784,16 @@ $Config = Get-Configuration -fileName $ConfigFile
 
 if ((Get-StatusStage -fileName $tempFile) -eq 0)
 {
+    "@echo off" | Out-File -FilePath $startupFile
+    $CommandLine = "-NoExit -Command Set-Location `"$PWD`"; `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.BoundParameters.Values + $MyInvocation.UnboundArguments
+    "powershell.exe -Command `"Start-Process -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine`"" | Out-File -FilePath $startupFile
+
+exit
+    Set-StatusStage -fileName $tempFile -stage 1
+}
+
+if ((Get-StatusStage -fileName $tempFile) -eq 1)
+{
     # Install PowerShell Windows Update
     Write-Host "Installing PSWindowsUpdate..."
     Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.208 -Force
@@ -814,7 +826,7 @@ if ((Get-StatusStage -fileName $tempFile) -eq 0)
             }
         }
     }
-    Set-StatusStage -fileName $tempFile -stage 1
+    Set-StatusStage -fileName $tempFile -stage 2
 
     if ($NeedsReboot -eq $true)
     {
@@ -826,27 +838,27 @@ if ((Get-StatusStage -fileName $tempFile) -eq 0)
     }
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 1)
+if ((Get-StatusStage -fileName $tempFile) -eq 2)
 {
 
     Hide-WindowsUpdates -IgnoreTitle Silverlight
     Hide-WindowsUpdates -IgnoreTitle Preview
 
-    Set-StatusStage -fileName $tempFile -stage 2
+    Set-StatusStage -fileName $tempFile -stage 3
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 2)
+if ((Get-StatusStage -fileName $tempFile) -eq 3)
 {
     while (Install-WindowsUpdates)
     {
 
     }
 
-    Set-StatusStage -fileName $tempFile -stage 3
+    Set-StatusStage -fileName $tempFile -stage 4
 }
 
 
-if ((Get-StatusStage -fileName $tempFile) -eq 3)
+if ((Get-StatusStage -fileName $tempFile) -eq 4)
 {
     if ($Config.InstallWsl)
     {
@@ -868,18 +880,18 @@ if ((Get-StatusStage -fileName $tempFile) -eq 3)
             }
         }
     }
-    Set-StatusStage -fileName $tempFile -stage 4
+    Set-StatusStage -fileName $tempFile -stage 5
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 4)
+if ((Get-StatusStage -fileName $tempFile) -eq 5)
 {
     # Windows store updates page
     Update-StoreApps
 	
-    Set-StatusStage -fileName $tempFile -stage 5
+    Set-StatusStage -fileName $tempFile -stage 6
 }
 
-while ((Get-StatusStage -fileName $tempFile) -eq 5)
+while ((Get-StatusStage -fileName $tempFile) -eq 6)
 {
     [int]$nextTaskStage=Get-TaskStage -fileName $tempFile
 
@@ -888,10 +900,12 @@ while ((Get-StatusStage -fileName $tempFile) -eq 5)
     if ($taskStage -eq $null)
     {
         Write-Host "End of tasks..."
-        Set-StatusStage -fileName $tempFile -stage 6
+        Set-StatusStage -fileName $tempFile -stage 7
     }
-
-    Write-Host "Starting stage $($taskStage.StageNumber)."
+    else
+    {
+        Write-Host "Starting stage $($taskStage.StageNumber)."
+    }
 
     if ($taskStage.StartMessage)
     {
@@ -899,7 +913,7 @@ while ((Get-StatusStage -fileName $tempFile) -eq 5)
     }
 
     # do this only if we haven't skipped past
-    if ((Get-StatusStage -fileName $tempFile) -eq 5)
+    if ((Get-StatusStage -fileName $tempFile) -eq 6)
     {
         $NeedsReboot = $false
 
@@ -985,8 +999,8 @@ while ((Get-StatusStage -fileName $tempFile) -eq 5)
 
         Set-TaskStage -fileName $tempFile -stage $nextTaskStage
 
-        # If we are still in stage 5
-        if ((Get-StatusStage -fileName $tempFile) -eq 5)
+        # If we are still in stage 6
+        if ((Get-StatusStage -fileName $tempFile) -eq 6)
         {
             if ($taskStage.FinishMessage)
             {
@@ -1029,4 +1043,10 @@ while ((Get-StatusStage -fileName $tempFile) -eq 5)
             }
         }
     }
+}
+
+if ((Get-StatusStage -fileName $tempFile) -eq 7)
+{
+    Remove-Item -Path $startupFile
+    Set-StatusStage -fileName $tempFile -stage 8
 }

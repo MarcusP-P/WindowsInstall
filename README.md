@@ -109,7 +109,6 @@ Deployment Tool.
 * Make sure we get all of the updates
 
 ### Missing bits
-* While doing rebooting, re-start script on login automatically
 * Do upgrades before WSL to allow for an update to a more recent version of Windows
 * Check requirements before installing items (e.g. Terminal)
 * Check if Winget is installed
