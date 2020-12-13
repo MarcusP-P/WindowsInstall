@@ -72,10 +72,6 @@
 			"Tasks": [
 				{
 					"Type": "winget",
-					"Id": "Microsoft.Edge"
-				},
-				{
-					"Type": "winget",
 					"Id": "AgileBits.1Password"
 				},
 				{
