@@ -25,9 +25,6 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     }
 }
 
-# the progress bar slows down downloads
-$ProgressPreference = 'SilentlyContinue'
-
 # The buildnumber of this version of Windows
 $WindowsVersion=[long]::Parse((Get-WmiObject Win32_OperatingSystem).BuildNumber)
 
@@ -365,9 +362,16 @@ function Install-DownloadedFile
 
     $filePath=$env:TEMP + "\" + $fileName
 
-    Write-Host "Downloading $wsl2_kernel"
+    Write-Host "Downloading $Url"
+
+    
+    # the progress bar slows down downloads
+    $oldProgressPreference = $ProgressPreference
+    $ProgressPreference = 'SilentlyContinue'
 
     Invoke-WebRequest -Uri $Url -OutFile "$filePath"
+
+    $ProgressPreference = $oldProgressPreference
 
     if (!$AdditionalOptions)
     {
