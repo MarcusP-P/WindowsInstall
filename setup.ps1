@@ -784,11 +784,9 @@ $Config = Get-Configuration -fileName $ConfigFile
 
 if ((Get-StatusStage -fileName $tempFile) -eq 0)
 {
-    "@echo off" | Out-File -FilePath $startupFile
-    $CommandLine = "-NoExit -Command Set-Location `"$PWD`"; `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.BoundParameters.Values + $MyInvocation.UnboundArguments
-    "powershell.exe -Command `"Start-Process -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine`"" | Out-File -FilePath $startupFile
+    "@echo off" | Out-File -Encoding ascii -FilePath $startupFile
+    "powershell -Command Set-Location `"`"$PWD`"`" ; `"`"$($MyInvocation.MyCommand.Path)`"`"" | Out-File -Append -Encoding ascii -FilePath $startupFile
 
-exit
     Set-StatusStage -fileName $tempFile -stage 1
 }
 
