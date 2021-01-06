@@ -80,7 +80,7 @@ function Get-StatusFile
 
     if (!(Test-Path $fileName -PathType leaf))
     {
-        $status=@{Stage=0;ConfigFile="";TaskStage=0}
+        $status=@{Stage="";ConfigFile="";TaskStage=0}
 
         # Save the new status
         Save-StatusFile -FileName $fileName -Status $status
@@ -130,7 +130,7 @@ function Set-StatusStage
         [Parameter (Mandatory)]
         [string]$fileName,
         [Parameter (Mandatory)]
-        [int]$stage
+        [string]$stage
     )
 
     $status = Get-StatusFile -fileName $fileName
@@ -742,7 +742,7 @@ function Install-Office
 
 ### Make sure the config file exists and is setup
 # We only want the user to pass the config filename on the command line
-if ((Get-StatusStage -fileName $tempFile) -eq 0)
+if ((Get-StatusStage -fileName $tempFile) -eq "")
 {
     if (! $ConfigFile)
     {
@@ -786,15 +786,15 @@ else
 
 $Config = Get-Configuration -fileName $ConfigFile
 
-if ((Get-StatusStage -fileName $tempFile) -eq 0)
+if ((Get-StatusStage -fileName $tempFile) -eq "")
 {
     "@echo off" | Out-File -Encoding ascii -FilePath $startupFile
     "powershell -Command Set-Location `"`"$PWD`"`" ; `"`"$($MyInvocation.MyCommand.Path)`"`"" | Out-File -Append -Encoding ascii -FilePath $startupFile
 
-    Set-StatusStage -fileName $tempFile -stage 1
+    Set-StatusStage -fileName $tempFile -stage "wsl"
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 1)
+if ((Get-StatusStage -fileName $tempFile) -eq "wsl")
 {
     # Install PowerShell Windows Update
     Write-Host "Installing PSWindowsUpdate..."
@@ -828,7 +828,7 @@ if ((Get-StatusStage -fileName $tempFile) -eq 1)
             }
         }
     }
-    Set-StatusStage -fileName $tempFile -stage 2
+    Set-StatusStage -fileName $tempFile -stage "prepareUpdates"
 
     if ($NeedsReboot -eq $true)
     {
@@ -840,27 +840,43 @@ if ((Get-StatusStage -fileName $tempFile) -eq 1)
     }
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 2)
+if ((Get-StatusStage -fileName $tempFile) -eq "prepareUpdates")
 {
+    Add-WUServiceManager -MicrosoftUpdate
 
     Hide-WindowsUpdates -IgnoreTitle Silverlight
     Hide-WindowsUpdates -IgnoreTitle Preview
 
-    Set-StatusStage -fileName $tempFile -stage 3
+    Set-StatusStage -fileName $tempFile -stage "installUpdates"
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 3)
+if ((Get-StatusStage -fileName $tempFile) -eq "installUpdates")
 {
     while (Install-WindowsUpdates)
     {
 
     }
 
-    Set-StatusStage -fileName $tempFile -stage 4
+    Set-StatusStage -fileName $tempFile -stage "installUpdatesSecondStage"
+
+    # If there is a Windows update, it may need a second reboot (Include link)
+    shutdown /r /f /t 0
+
 }
 
+# If we've done a feature update, we can check for updates again...
+if ((Get-StatusStage -fileName $tempFile) -eq "installUpdatesSecondStage")
+{
+    while (Install-WindowsUpdates)
+    {
 
-if ((Get-StatusStage -fileName $tempFile) -eq 4)
+    }
+
+    Set-StatusStage -fileName $tempFile -stage "wsl2"
+
+}
+
+if ((Get-StatusStage -fileName $tempFile) -eq "wsl2")
 {
     if ($Config.InstallWsl)
     {
@@ -882,18 +898,18 @@ if ((Get-StatusStage -fileName $tempFile) -eq 4)
             }
         }
     }
-    Set-StatusStage -fileName $tempFile -stage 5
+    Set-StatusStage -fileName $tempFile -stage "updateStoreApps"
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 5)
+if ((Get-StatusStage -fileName $tempFile) -eq "updateStoreApps")
 {
     # Windows store updates page
     Update-StoreApps
 	
-    Set-StatusStage -fileName $tempFile -stage 6
+    Set-StatusStage -fileName $tempFile -stage "installTasks"
 }
 
-while ((Get-StatusStage -fileName $tempFile) -eq 6)
+while ((Get-StatusStage -fileName $tempFile) -eq "installTasks")
 {
     [int]$nextTaskStage=Get-TaskStage -fileName $tempFile
 
@@ -902,7 +918,7 @@ while ((Get-StatusStage -fileName $tempFile) -eq 6)
     if ($taskStage -eq $null)
     {
         Write-Host "End of tasks..."
-        Set-StatusStage -fileName $tempFile -stage 7
+        Set-StatusStage -fileName $tempFile -stage "cleanupAutoBoot"
     }
     else
     {
@@ -915,7 +931,7 @@ while ((Get-StatusStage -fileName $tempFile) -eq 6)
     }
 
     # do this only if we haven't skipped past
-    if ((Get-StatusStage -fileName $tempFile) -eq 6)
+    if ((Get-StatusStage -fileName $tempFile) -eq "installTasks")
     {
         $NeedsReboot = $false
 
@@ -1002,7 +1018,7 @@ while ((Get-StatusStage -fileName $tempFile) -eq 6)
         Set-TaskStage -fileName $tempFile -stage $nextTaskStage
 
         # If we are still in stage 6
-        if ((Get-StatusStage -fileName $tempFile) -eq 6)
+        if ((Get-StatusStage -fileName $tempFile) -eq "installTasks")
         {
             if ($taskStage.FinishMessage)
             {
@@ -1047,8 +1063,8 @@ while ((Get-StatusStage -fileName $tempFile) -eq 6)
     }
 }
 
-if ((Get-StatusStage -fileName $tempFile) -eq 7)
+if ((Get-StatusStage -fileName $tempFile) -eq "cleanupAutoBoot")
 {
     Remove-Item -Path $startupFile
-    Set-StatusStage -fileName $tempFile -stage 8
+    Set-StatusStage -fileName $tempFile -stage "finished"
 }
