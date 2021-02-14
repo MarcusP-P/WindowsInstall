@@ -105,8 +105,9 @@ Deployment Tool.
 * Install from Zipfile (e.g. OpenDBDiff)
 * Install/uninstall Wondows Capabilities
 * Install/Uninstall Windows Packages
-* Move Hiding of Windows Updates to Configuration file
-* Make sure we get all of the updates
+* Windows 10 21H2 changes
+  * Use wsl --install
+  * Use built-in Winget
 
 ### Missing bits
 * Do upgrades before WSL to allow for an update to a more recent version of Windows
@@ -128,13 +129,16 @@ Deployment Tool.
 * Configure WSL environment (.profile)
 * Can we configure Edge (Portions that aren't synced like Search Engines, and use the selected search engine form new tab screen)
 * Can we configure Windows Settings
-	* Trackpad Tap to Click
+  * Trackpad Tap to Click
+  * Natural Scrolling
 * Set power settings
-* Add configuration for PowerToy screen layouts
+* Add configuration for PowerToy Fanzy Zones screen layouts
 * Install PowerLine
 * Add Terminal configuration
-	* Include PowerLine
+  * Include PowerLine
 * Configure Powershell
+* Set system language and locale
+* Set user  language and locale
 
 [1]: https://4sysops.com/archives/how-to-create-an-open-file-folder-dialog-box-with-powershell/
 [2]: https://www.c-sharpcorner.com/uploadfile/mahesh/openfiledialog-in-wpf/
