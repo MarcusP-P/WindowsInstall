@@ -43,7 +43,7 @@
 				},
 				{
 					"Type": "winget",
-					"Id": "Microsoft.VisualStudioCode"
+					"Id": "Microsoft.VisualStudioCode-System-x64"
 				},
 				{
 					"Type": "winget",
