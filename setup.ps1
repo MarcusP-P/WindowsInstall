@@ -857,21 +857,6 @@ if ((Get-StatusStage -fileName $tempFile) -eq "installUpdates")
 
     }
 
-    Set-StatusStage -fileName $tempFile -stage "installUpdatesSecondStage"
-
-    # If there is a Windows update, it may need a second reboot (Include link)
-    shutdown /r /f /t 0
-
-}
-
-# If we've done a feature update, we can check for updates again...
-if ((Get-StatusStage -fileName $tempFile) -eq "installUpdatesSecondStage")
-{
-    while (Install-WindowsUpdates)
-    {
-
-    }
-
     Set-StatusStage -fileName $tempFile -stage "wsl2"
 
 }
@@ -887,17 +872,27 @@ if ((Get-StatusStage -fileName $tempFile) -eq "wsl2")
             # checks because I don't intend to run older versions of Windows. Feel free to file a PR
             if ($windowsVersion -ge $windows2004)
             {
-
-                # the WSL kernel needs to be downlaoded manually for now.
+                # The WSL kernel is now picked up as part of Software Update. Leaving this here just in case...
                 # see https://aka.ms/wsl2kernel
 
-                Install-DownloadedFile -Url "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" -AdditionalOptions ("/quiet")
+                #Install-DownloadedFile -Url "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" -AdditionalOptions ("/quiet")
 
                 # Set the wsl default version before we begin
                 wsl --set-default-version 2
             }
         }
     }
+    Set-StatusStage -fileName $tempFile -stage "installUpdatesSecondStage"
+}
+
+# If we've done a feature update, we can check for updates again...
+if ((Get-StatusStage -fileName $tempFile) -eq "installUpdatesSecondStage")
+{
+    while (Install-WindowsUpdates)
+    {
+
+    }
+
     Set-StatusStage -fileName $tempFile -stage "updateStoreApps"
 }
 
