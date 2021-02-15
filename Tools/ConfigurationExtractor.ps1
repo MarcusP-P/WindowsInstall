@@ -70,6 +70,10 @@ Write-Host "Getting Installed Drivers"
 Get-WindowsDriver -Online -All | Sort-Object -Property OriginalFileName | Select-Object OriginalFileName,Inbox,ClassName,BootCritical,ProviderName,Date,Version | Out-String -Width 4096 | Out-File "$RawPath\Drivers.txt"
 Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName Drivers.txt
 
+Write-Host "Getting Installed Additional Drivers"
+Get-WindowsDriver -Online | Sort-Object -Property OriginalFileName | Select-Object OriginalFileName,Inbox,ClassName,BootCritical,ProviderName,Date,Version | Out-String -Width 4096 | Out-File "$RawPath\OEMDrivers.txt"
+Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName OEMDrivers.txt
+
 Write-Host "Getting Provisioned AppX Packages"
 Get-AppxProvisionedPackage -online | Sort-Object -Property PackageName | Out-String -Width 4096 | Out-File "$RawPath\AppXProvisioned.txt"
 Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName AppXProvisioned.txt
@@ -85,3 +89,23 @@ Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName WindowsCapabi
 Write-Host "Getting Windows Packages"
 Get-WindowsPackage -Online | Sort-Object -Property PackageName | Out-String -Width 4096 | Out-File "$RawPath\WindowsPackages.txt"
 Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName WindowsPackages.txt
+
+Write-Host "Getting Windows Scheduled Tasks"
+Get-ScheduledTask | Sort-Object -Property TaskPath | Select TaskName,TaskPath,Author,Date | Out-String -Width 4096 | Out-File "$RawPath\ScheduledTasks.txt"
+Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName ScheduledTasks.txt
+
+Write-Host "Getting Windows User Language List"
+Get-WinUserLanguageList | Out-String -Width 4096 | Out-File "$RawPath\LanguageList.txt"
+Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName LanguageList.txt
+
+Write-Host "Getting Windows System Locale"
+Get-WinSystemLocale | Out-String -Width 4096 | Out-File "$RawPath\WindowsSystemLocale.txt"
+Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName WindowsSystemLocale.txt
+
+Write-Host "Getting Windows Home Location"
+Get-WinHomeLocation | Out-String -Width 4096 | Out-File "$RawPath\WindowsHomeLocation.txt"
+Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName WindowsHomeLocation.txt
+
+Write-Host "Getting Partitions"
+Get-Partition | select PartitionNumber,Size,Type,IsActive,IsBoot,IsHidden,IsSystem | Out-String -Width 4096 | Out-File "$RawPath\Parition.txt"
+Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName Parition.txt
