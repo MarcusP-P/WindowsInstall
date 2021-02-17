@@ -38,6 +38,10 @@ Write-Host "Getting Windows Edition"
 Get-WindowsEdition -Online| Out-String -Width 4096 | Out-File "$RawPath\WindowsEdition.txt"
 Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName WindowsEdition.txt
 
+Write-Host "Getting Windows Information"
+get-computerinfo | select WindowsEditionId,WindowsInstallationType,WindowsProductName,WindowsVersion,OsName,OsType,OsOperatingSystemSKU,OsVersion,OsCSDVersion,OsBuildNumber,OsHardwareAbstractionLayer,OsHotFixes,OsLocale,OsBuildType,OsEncryptionLevel,OsDebug,OsDataExecutionPreventionAvailable,OsDataExecutionPrevention32BitApplications,OsDataExecutionPreventionDrivers,OsDataExecutionPreventionSupportPolicy,OsManufacturer,OsMuiLanguages,OsArchitecture,OsLanguage,OsOtherTypeDescription,OsProductSuites,OsPAEEnabled,OsProductType,OsServicePackMajorVersion,OsServicePackMinorVersion,OsSuites,OsServerLevel,KeyboardLayout,PowerPlatformRole,HyperVisorPresent,HyperVRequirementDataExecutionPreventionAvailable,HyperVRequirementSecondLevelAddressTranslation,HyperVRequirementVirtualizationFirmwareEnabled,HyperVRequirementVMMonitorModeExtensions,DeviceGuardSmartStatus,DeviceGuardRequiredSecurityProperties,DeviceGuardAvailableSecurityProperties,DeviceGuardSecurityServicesConfigured,DeviceGuardSecurityServicesRunning,DeviceGuardUserModeCodeIntegrityPolicyEnforcementStatus| Out-String -Width 4096 | Out-File "$RawPath\WindowsInformation.txt"
+Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName WindowsInformation.txt
+
 Write-Host "Getting Installed Programs"
 Get-WmiObject -Class win32_product | Sort-Object -Property IdentifyingNumber | Out-String -Width 4096 | Out-File "$RawPath\InstalledPrograms.txt"
 Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName InstalledPrograms.txt
