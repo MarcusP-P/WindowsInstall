@@ -39,7 +39,7 @@ Get-WindowsEdition -Online| Out-String -Width 4096 | Out-File "$RawPath\WindowsE
 Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName WindowsEdition.txt
 
 Write-Host "Getting Windows Information"
-get-computerinfo | select WindowsEditionId,WindowsInstallationType,WindowsProductName,WindowsVersion,OsName,OsType,OsOperatingSystemSKU,OsVersion,OsCSDVersion,OsBuildNumber,OsHardwareAbstractionLayer,OsHotFixes,OsLocale,OsBuildType,OsEncryptionLevel,OsDebug,OsDataExecutionPreventionAvailable,OsDataExecutionPrevention32BitApplications,OsDataExecutionPreventionDrivers,OsDataExecutionPreventionSupportPolicy,OsManufacturer,OsMuiLanguages,OsArchitecture,OsLanguage,OsOtherTypeDescription,OsProductSuites,OsPAEEnabled,OsProductType,OsServicePackMajorVersion,OsServicePackMinorVersion,OsSuites,OsServerLevel,KeyboardLayout,PowerPlatformRole,HyperVisorPresent,HyperVRequirementDataExecutionPreventionAvailable,HyperVRequirementSecondLevelAddressTranslation,HyperVRequirementVirtualizationFirmwareEnabled,HyperVRequirementVMMonitorModeExtensions,DeviceGuardSmartStatus,DeviceGuardRequiredSecurityProperties,DeviceGuardAvailableSecurityProperties,DeviceGuardSecurityServicesConfigured,DeviceGuardSecurityServicesRunning,DeviceGuardUserModeCodeIntegrityPolicyEnforcementStatus| Out-String -Width 4096 | Out-File "$RawPath\WindowsInformation.txt"
+get-computerinfo | Select-Object WindowsEditionId,WindowsInstallationType,WindowsProductName,WindowsVersion,OsName,OsType,OsOperatingSystemSKU,OsVersion,OsCSDVersion,OsBuildNumber,OsHardwareAbstractionLayer,OsHotFixes,OsLocale,OsBuildType,OsEncryptionLevel,OsDebug,OsDataExecutionPreventionAvailable,OsDataExecutionPrevention32BitApplications,OsDataExecutionPreventionDrivers,OsDataExecutionPreventionSupportPolicy,OsManufacturer,OsMuiLanguages,OsArchitecture,OsLanguage,OsOtherTypeDescription,OsProductSuites,OsPAEEnabled,OsProductType,OsServicePackMajorVersion,OsServicePackMinorVersion,OsSuites,OsServerLevel,KeyboardLayout,PowerPlatformRole,HyperVisorPresent,HyperVRequirementDataExecutionPreventionAvailable,HyperVRequirementSecondLevelAddressTranslation,HyperVRequirementVirtualizationFirmwareEnabled,HyperVRequirementVMMonitorModeExtensions,DeviceGuardSmartStatus,DeviceGuardRequiredSecurityProperties,DeviceGuardAvailableSecurityProperties,DeviceGuardSecurityServicesConfigured,DeviceGuardSecurityServicesRunning,DeviceGuardUserModeCodeIntegrityPolicyEnforcementStatus| Out-String -Width 4096 | Out-File "$RawPath\WindowsInformation.txt"
 Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName WindowsInformation.txt
 
 Write-Host "Getting Installed Programs"
@@ -95,7 +95,7 @@ Get-WindowsPackage -Online | Sort-Object -Property PackageName | Out-String -Wid
 Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName WindowsPackages.txt
 
 Write-Host "Getting Windows Scheduled Tasks"
-Get-ScheduledTask | Sort-Object -Property TaskPath | Select TaskName,TaskPath,Author,Date | Out-String -Width 4096 | Out-File "$RawPath\ScheduledTasks.txt"
+Get-ScheduledTask | Sort-Object -Property TaskPath | Select-Object TaskName,TaskPath,Author,Date | Out-String -Width 4096 | Out-File "$RawPath\ScheduledTasks.txt"
 Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName ScheduledTasks.txt
 
 Write-Host "Getting Windows User Language List"
@@ -111,5 +111,5 @@ Get-WinHomeLocation | Out-String -Width 4096 | Out-File "$RawPath\WindowsHomeLoc
 Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName WindowsHomeLocation.txt
 
 Write-Host "Getting Partitions"
-Get-Partition | select PartitionNumber,Size,Type,IsActive,IsBoot,IsHidden,IsSystem | Out-String -Width 4096 | Out-File "$RawPath\Parition.txt"
+Get-Partition | Select-Object PartitionNumber,Size,Type,IsActive,IsBoot,IsHidden,IsSystem | Out-String -Width 4096 | Out-File "$RawPath\Parition.txt"
 Convert-LineEndings -SourcePath $RawPath -DestPath $Path -FileName Parition.txt
