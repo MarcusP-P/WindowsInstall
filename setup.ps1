@@ -234,7 +234,7 @@ function Get-TaskStages
         elseif ($taskStage.StageNumber -gt $stage)
         {
             #If so, check if our current value ($foundValue) is null 
-            if ($foundValue -eq $null)
+            if ($null -eq $foundValue)
             {
                 # If so, stash the current one
                 $foundValue = $taskStage
@@ -910,7 +910,7 @@ while ((Get-StatusStage -fileName $tempFile) -eq "installTasks")
 
     $taskStage = Get-TaskStages -stage $nextTaskStage -configuration $Config
 
-    if ($taskStage -eq $null)
+    if ($null -eq $taskStage)
     {
         Write-Host "End of tasks..."
         Set-StatusStage -fileName $tempFile -stage "cleanupAutoBoot"
