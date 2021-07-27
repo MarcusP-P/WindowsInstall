@@ -43,6 +43,14 @@
 				},
 				{
 					"Type": "winget",
+					"Id": "Microsoft.VisualStudio.2022.Enterprise-Preview",
+					"AdditionalOptions": [
+						"--override",
+						"--passive --wait --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;includeOptional --add Microsoft.VisualStudio.Workload.NativeDesktop --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1"
+					]
+				},
+				{
+					"Type": "winget",
 					"Id": "Microsoft.VisualStudioCode",
 					"Scope": "machine"
 				},
