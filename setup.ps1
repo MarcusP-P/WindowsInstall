@@ -29,6 +29,7 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 $WindowsVersion=[long]::Parse((Get-WmiObject Win32_OperatingSystem).BuildNumber)
 
 # Known Build Numbers
+$windows21H1=19043
 $windows20H2=19042
 $windows2004=19041
 $windows1909=18363
