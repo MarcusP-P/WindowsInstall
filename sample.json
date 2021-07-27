@@ -60,6 +60,10 @@
 				},
 				{
 					"Type": "winget",
+					"Id": "Microsoft.EdgeWebView2Runtime"
+				},
+				{
+					"Type": "winget",
 					"Id": "DBBrowserForSQLite.DBBrowserForSQLite"
 				},
 				{
@@ -110,12 +114,50 @@
 				{
 					"Type": "winget",
 					"Id": "VMware.WorkstationPro"
+				},
+				{
+					"Type": "winget",
+					"Id": "Microsoft.MouseandKeyboardCenter"
 				}
 			]
 		},
 		{
 			"StageNumber": 4,
-			"StartMessage": "Surface Pro 7 stuff",
+			"StartMessage": "Other Software",
+			"FinishAction": "continue",
+			"Tasks": [
+				{
+					"Type": "winget",
+					"Id": "Discord.Discord"
+				},
+				{
+					"Type": "winget",
+					"Id": "SlackTechnologies.Slack"
+				},
+				{
+					"Type": "winget",
+					"Id": "Zoom.Zoom"
+				},
+				{
+					"Type": "microsoftStore",
+					"Text": "iTunes",
+					"Id": "9PB2MZ1ZMB1S"
+				},
+				{
+					"Type": "microsoftStore",
+					"Text": "iCloud",
+					"Id": "9PKTQ5699M62"
+				},
+				{
+					"Type": "microsoftStore",
+					"Text": "Apple TV",
+					"Id": "9MW0ZWQFH0M2"
+				}
+			]
+		},
+		{
+			"StageNumber": 5,
+			"StartMessage": "Surface stuff",
 			"FinishAction": "continue",
 			"Tasks": [
 				{
@@ -146,7 +188,7 @@
 			]
 		},
 		{
-			"StageNumber": 5,
+			"StageNumber": 6,
 			"StartMessage": "Installing Ubuntu",
 			"FinishAction": "continue",
 			"Tasks": [
@@ -163,7 +205,7 @@
 			]
 		},
 		{
-			"StageNumber": 6,
+			"StageNumber": 7,
 			"StartMessage": "Finally Office...",
 			"FinishAction": "continue",
 			"Tasks": [
