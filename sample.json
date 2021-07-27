@@ -31,11 +31,11 @@
 				},
 				{
 					"Type": "winget",
-					"Id": "OpenJS.NodeJS"
+					"Id": "OpenJS.NodeJSLTS"
 				},
 				{
 					"Type": "winget",
-					"Id": "Microsoft.VisualStudio.Enterprise",
+					"Id": "Microsoft.VisualStudio.2019.Enterprise",
 					"AdditionalOptions": [
 						"--override",
 						"--passive --wait --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;includeOptional --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1"
@@ -43,7 +43,8 @@
 				},
 				{
 					"Type": "winget",
-					"Id": "Microsoft.VisualStudioCode-System-x64"
+					"Id": "Microsoft.VisualStudioCode",
+					"Scope": "machine"
 				},
 				{
 					"Type": "winget",
@@ -51,17 +52,16 @@
 				},
 				{
 					"Type": "winget",
-					"Id": "SQLiteBrowser.SQLiteBrowser"
+					"Id": "DBBrowserForSQLite.DBBrowserForSQLite"
 				},
 				{
 					"Type": "winget",
-					"Id": "Microsoft.AzureDataStudio"
+					"Id": "Microsoft.AzureDataStudio",
+					"Scope": "machine"
 				},
 				{
-					"Type": "download",
-					"Text": "Installing Fork",
-					"Url": "https://git-fork.com/update/win/ForkInstaller.exe",
-					"WaitMessage": "Press Enter once Fork has finished installing"
+					"Type": "winget",
+					"Id": "Fork.Fork"
 				}
 			]
 		},
@@ -102,7 +102,7 @@
 				{
 					"Type": "winget",
 					"Id": "7zip.7zip"
-				},				
+				},
 				{
 					"Type": "winget",
 					"Id": "VMware.WorkstationPro"
