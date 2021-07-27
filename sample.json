@@ -101,10 +101,6 @@
 				},
 				{
 					"Type": "winget",
-					"Id": "TortoiseGit.TortoiseGit"
-				},
-				{
-					"Type": "winget",
 					"Id": "vim.vim"
 				},
 				{
