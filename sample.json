@@ -130,6 +130,11 @@
 				},
 				{
 					"Type": "microsoftStore",
+					"Text": "Surface Diagnostic Toolkit",
+					"Id": "9NF1MR6C60ZF"
+				},
+				{
+					"Type": "microsoftStore",
 					"Text": "MPEG-2 Video Extension",
 					"Id": "9N95Q1ZZPMH4"
 				},
