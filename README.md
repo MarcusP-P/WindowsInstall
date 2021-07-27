@@ -48,6 +48,7 @@ Basic configuration is at the top level:
 
 ### Install a Winget package
 * `Id`: [required] the Winget package to add. It is installed with `winget -e`, so you need to accurately match the package name
+* `Scope`: [optional] Specify the scope of the package
 * `AdditionalOptions`: [optional] an array of additional command line parameters to pass to Winget.
 
 ### Download and install from a URL

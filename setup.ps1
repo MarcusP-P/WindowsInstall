@@ -338,13 +338,18 @@ function Install-WingetPackage
     (
         [Parameter (Mandatory)]
         [string] $Id,
+        [string] $Scope,
         [string[]] $AdditionalOptions
     )
 
+    $scopeParam = ""
+
+    if ($PSBoundParameters.ContainsKey("Scope"))
+    {
+        $scopeParam = "--scope"
+    }
     Write-Host "Installing $Id..."
-    winget install --exact $Id $AdditionalOptions
-
-
+    winget install --exact $Id $scopeParam $Scope $AdditionalOptions
 }
 
 # Download and install an installer
@@ -944,14 +949,19 @@ while ((Get-StatusStage -fileName $tempFile) -eq "installTasks")
                 # Install an app through winget
                 "winget"
                 {
+                    $wingetParams = @{
+                        Id = $task.Id;
+                    } 
+
+                    if ($task.Scope)
+                    {
+                        $wingetParams.Add("Scope", $task.Scope)
+                    }
                     if ($task.AdditionalOptions)
                     {
-                        Install-WingetPackage -Id $task.Id -AdditionalOptions ([string[]] $task.AdditionalOptions)
+                        $wingetParams.Add("AdditionalOptions", [string[]] $task.AdditionalOptions)
                     }
-                    else
-                    {
-                        Install-WingetPackage -Id $task.Id                      
-                    }
+                    Install-WingetPackage @wingetParams
                 }
                 # run an execurable
                 "exec"
