@@ -34,7 +34,7 @@ Basic configuration is at the top level:
 			* `microsoftStore`: install a Microsoft Store app 
 			* `winget`: install an app using Winget
 			* `download`: downoad and execute an installer
-			* `exec	: run an executable
+			* `exec`: run an executable
 			* `addWindowsFeature`: add a Windows feature
 			* `removeWindowsFeature`: remove a Windows feature
 			* `office`: intall Office 2016/2019/365, including customisations
