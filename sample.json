@@ -73,6 +73,22 @@
 				},
 				{
 					"Type": "winget",
+					"Id": "Docker.DockerDesktop"
+				},
+				{
+					"Type": "winget",
+					"Id": "LINQPad.LINQPad.5"
+				},
+				{
+					"Type": "winget",
+					"Id": "LINQPad.LINQPad.6"
+				},
+				{
+					"Type": "winget",
+					"Id": "JetBrains.dotUltimatep"
+				},
+				{
+					"Type": "winget",
 					"Id": "Fork.Fork"
 				}
 			]
@@ -117,7 +133,7 @@
 				},
 				{
 					"Type": "winget",
-					"Id": "Microsoft.MouseandKeyboardCenter"
+					"Id": "Figma.Figma"
 				}
 			]
 		},
@@ -139,6 +155,19 @@
 					"Id": "Zoom.Zoom"
 				},
 				{
+					"Type": "download",
+					"Text": "Screens Connect",
+					"Url": "https://updates.edovia.com/com.edovia.screens.connect.windows.3x/ScreensConnect_3.5.6.1100_Setup.exe"
+				},
+				{
+					"Type": "winget",
+					"Id": "plex.Plex"
+				},
+				{
+					"Type": "winget",
+					"Id": "RaspberryPiFoundation.RaspberryPiImager"
+				},
+				{
 					"Type": "microsoftStore",
 					"Text": "iTunes",
 					"Id": "9PB2MZ1ZMB1S"
@@ -147,16 +176,30 @@
 					"Type": "microsoftStore",
 					"Text": "iCloud",
 					"Id": "9PKTQ5699M62"
-				},
-				{
-					"Type": "microsoftStore",
-					"Text": "Apple TV",
-					"Id": "9MW0ZWQFH0M2"
 				}
 			]
 		},
 		{
 			"StageNumber": 5,
+			"StartMessage": "Games",
+			"FinishAction": "continue",
+			"Tasks": [
+				{
+					"Type": "winget",
+					"Id": "Blizzard.BattleNet"
+				},
+				{
+					"Type": "winget",
+					"Id": "Valve.Steam"
+				},
+				{
+					"Type": "winget",
+					"Id": "GOG.Galaxy"
+				}
+			]
+		},
+		{
+			"StageNumber": 6,
 			"StartMessage": "Surface stuff",
 			"FinishAction": "continue",
 			"Tasks": [
@@ -184,11 +227,15 @@
 					"Type": "microsoftStore",
 					"Text": "HEVC Video Extensions",
 					"Id": "9NMZLZ57R3T7"
+				},
+				{
+					"Type": "winget",
+					"Id": "Microsoft.MouseandKeyboardCenter"
 				}
 			]
 		},
 		{
-			"StageNumber": 6,
+			"StageNumber": 7,
 			"StartMessage": "Installing Ubuntu",
 			"FinishAction": "continue",
 			"Tasks": [
@@ -205,7 +252,7 @@
 			]
 		},
 		{
-			"StageNumber": 7,
+			"StageNumber": 8,
 			"StartMessage": "Finally Office...",
 			"FinishAction": "continue",
 			"Tasks": [
