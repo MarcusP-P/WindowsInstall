@@ -117,19 +117,26 @@ Deployment Tool.
 * Add minimum and maximum Windows version numbers to tasks
 * Install from Zipfile (e.g. OpenDBDiff)
 * Install/uninstall Wondows Capabilities
-* Install/Uninstall Windows Packages
-* Windows 10 21H2 changes
-  * Use wsl --install
+* Install/uninstall Windows Packages
+* Windows 10 1809 changes
   * Use built-in Winget
+    * Check if App Installer is installed
+    * Make sure App Installer is the right version
+* Windows 10 2004 changes
+  * Use `wsl --install`
+* Windows 11 changes
+  * Cope with versions
 
 ### Missing bits
+
 * Do upgrades before WSL to allow for an update to a more recent version of Windows
+* Allow blocking of Windows Feature updates
 * Check requirements before installing items (e.g. Terminal)
-* Check if Winget is installed
 * Display the TaskStage number
-* Install latest version of Windows
+* Install latest Feature Update
 
 ### Features
+
 * Uninstall included Windows Installer apps
 * Uninstall included Windows Store apps
 * Add option to prompt for computer name
@@ -143,7 +150,7 @@ Deployment Tool.
 * Configure WSL environment (.profile)
 * Can we configure Edge (Portions that aren't synced like Search Engines, and use the selected search engine form new tab screen)
 * Can we configure Windows Settings
-  * Trackpad Tap to Click
+  * Disable Trackpad Tap to Click
   * Natural Scrolling
 * Set power settings
 * Add configuration for PowerToy Fanzy Zones screen layouts
