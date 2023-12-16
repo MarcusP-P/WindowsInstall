@@ -902,6 +902,7 @@ if ((Get-StatusStage -fileName $tempFile) -eq "wsl2")
                 #Install-DownloadedFile -Url "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" -AdditionalOptions ("/quiet")
 
                 # Set the wsl default version before we begin
+                wsl --upgrade
                 wsl --set-default-version 2
             }
         }
