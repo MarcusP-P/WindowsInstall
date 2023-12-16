@@ -18,7 +18,7 @@ The Configuration is read form a JSON file. Look at Sample.json
 Basic configuration is at the top level:
 
 * `ComputerName`: [optional] change the name of the computer
-* `InstallWsl`: [optional] a boolean to install WSL. If you are on Windows 2004 or later, it will automatically enable WSL2. Default: `false`
+* `InstallWsl`: [optional] a boolean to install WSL. If you are on Windows 2004 or later, it will automatically enable WSL2. Default: `false` _prefer to use exec wsl --install for now_
 * `TaskStages`: [optional] an array of task stages. At the end of each stage, the script will exit.
   * `StageNumber`: [required] the number of this stage.
     These are executed in ascending numerical order, starting with zero. If there is a missing stage, we will load the next highest number. At the moment, the script processes each script sequentially
@@ -31,6 +31,7 @@ Basic configuration is at the top level:
   * `Tasks`: [optional] an array of tasks
     * `Type`: [required] which can be one of the following:
       * `microsoftStore`: install a Microsoft Store app
+      * `removeMicrosoftStore`: uninstall a Microsoft Store app
       * `winget`: install an app using Winget
       * `download`: downoad and execute an installer
       * `exec`: run an executable

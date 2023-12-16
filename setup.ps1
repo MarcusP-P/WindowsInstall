@@ -332,6 +332,25 @@ function Install-StoreApp
     winget install -s msstore -e "$ProductID"
 }
 
+# Install a windows store app
+function Uninstall-StoreApp
+{
+    param
+    (
+        [Parameter (Mandatory)]
+        [string]$ProductId,
+        [string]$Text
+    )
+
+    if ($text)
+    {
+        Write-Host "Installing $Text"
+    }
+
+    # When winget supports Windows Store, update this
+    winget uninstall -e "$ProductID"
+}
+
 # Install a winget package
 function Install-WingetPackage
 {
@@ -945,6 +964,13 @@ while ((Get-StatusStage -fileName $tempFile) -eq "installTasks")
                 {
                     Install-StoreApp -ProductId $task.Id -Text $task.Text
                 }
+
+                # Uninstall a store app
+                "removeMicrosoftStore"
+                {
+                    Uninstall-StoreApp -ProductId $task.Id -Text $task.Text
+                }
+
 
                 # Install an app through winget
                 "winget"
