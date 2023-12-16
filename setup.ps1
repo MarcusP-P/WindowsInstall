@@ -29,6 +29,7 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 $WindowsVersion=[long]::Parse((Get-WmiObject Win32_OperatingSystem).BuildNumber)
 
 # Known Build Numbers
+$windows21H2=19044
 $windows21H1=19043
 $windows20H2=19042
 $windows2004=19041
@@ -43,9 +44,9 @@ $tempFile=$env:TEMP + "\Status.json"
 
 $startupFile=Join-Path -Path $([System.Environment]::GetFolderPath("Startup")) -ChildPath "WinstallStartup.cmd"
 
-if ($windowsVersion -lt $windows1703)
+if ($windowsVersion -lt $windows1809)
 {
-	Write-Host "Winget only supports Windows 10 1703 or later. Because this script pretty much requires Winget, it will not run on an older version"
+	Write-Host "Winget only supports Windows 10 1809 or later. Because this script pretty much requires Winget, it will not run on an older version"
 	exit
 }
 
@@ -328,8 +329,7 @@ function Install-StoreApp
     }
 
     # When winget supports Windows Store, update this
-    Start-Process "ms-windows-store://pdp/?productId=$ProductID"
-    Read-Host -Prompt "Press Enter once the package is installed"
+    winget install -s msstore -e "$ProductID"
 }
 
 # Install a winget package
@@ -743,7 +743,6 @@ function Install-Office
 
 }
     
-
 ##### Start of commands...
 
 ### Make sure the config file exists and is setup
@@ -779,7 +778,7 @@ else
 {
     if ($ConfigFile)
     {
-        Write-Error "Configuration file shoudl not be passed" -ErrorAction Stop
+        Write-Error "Configuration file should not be passed" -ErrorAction Stop
     }
 
     $ConfigFile = Get-StatusConfigFile -fileName $tempFile

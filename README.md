@@ -1,10 +1,6 @@
 # WindowsInstall
-A Script to install a clean Windows machine to something useful. 
 
-## Important note about Windows Package Manager
-You will need to [join the Windows Package Manager Insiders Program](http://aka.ms/winget-InsiderProgram) 
-and make sure you're logged into the Windows Store (You can log into the store while the store 
-updates are being downloaded)
+A Script to install a clean Windows machine to something useful. This script requires a minimum of Windows 1809, which is the oldest version which supports Winget.
 
 ## To make PowerShell work
 
