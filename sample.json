@@ -431,8 +431,18 @@
         },
         {
           "Type": "microsoftStore",
-          "Text": "iTunes",
-          "Id": "9PB2MZ1ZMB1S"
+          "Text": "Apple Music",
+          "Id": "9PFHDD62MXS1"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Apple TV",
+          "Id": "9NM4T8B9JQZ1"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Apple Devices",
+          "Id": "9NP83LWLPZ9K"
         },
         {
           "Type": "microsoftStore",
