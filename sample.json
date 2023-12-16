@@ -1,350 +1,579 @@
 {
-	"ComputerName": "Marcus-Surface",
-	"InstallWsl": true,
-	"TaskStages": [
-		{
-			"StageNumber": 2,
-			"StartMessage": "Installing developemnt tools",
-			"FinishAction": "continue",
-			"FinishMessage": "Completed dev tools",
-			"Tasks": [
-				{
-					"Type": "addWindowsFeature",
-					"Feature": "TelnetClient"
-				},
-				{
-					"Type": "removeWindowsFeature",
-					"Feature": "Internet-Explorer-Optional-amd64"
-				},
-				{
-					"Type": "winget",
-					"Id": "OpenJS.NodeJSLTS"
-				},
-				{
-					"Type": "winget",
-					"Id": "Microsoft.VisualStudio.2019.Enterprise",
-					"AdditionalOptions": [
-						"--override",
-						"--passive --wait --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;includeOptional --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1"
-					]
-				},
-				{
-					"Type": "winget",
-					"Id": "Microsoft.VisualStudio.2022.Enterprise-Preview",
-					"AdditionalOptions": [
-						"--override",
-						"--passive --wait --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;includeOptional --add Microsoft.VisualStudio.Workload.NativeDesktop --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1"
-					]
-				},
-				{
-					"Type": "winget",
-					"Id": "Microsoft.VisualStudioCode",
-					"Scope": "machine"
-				},
-				{
-					"Type": "winget",
-					"Id": "Microsoft.EdgeWebView2Runtime"
-				},
-				{
-					"Type": "winget",
-					"Id": "DBBrowserForSQLite.DBBrowserForSQLite"
-				},
-				{
-					"Type": "winget",
-					"Id": "Microsoft.AzureDataStudio",
-					"Scope": "machine"
-				},
-				{
-					"Type": "winget",
-					"Id": "Microsoft.SQLServerManagementStudio"
-				},
-				{
-					"Type": "winget",
-					"Id": "LINQPad.LINQPad.5"
-				},
-				{
-					"Type": "winget",
-					"Id": "LINQPad.LINQPad.6"
-				},
-				{
-					"Type": "winget",
-					"Id": "LINQPad.LINQPad.7"
-				},
-				{
-					"Type": "winget",
-					"Id": "JetBrains.dotUltimatep"
-				},
-				{
-					"Type": "winget",
-					"Id": "Fork.Fork"
-				}
-			]
-		},
-		{
-			"StageNumber": 3,
-			"StartMessage": "Installing utilities",
-			"FinishAction": "continue",
-			"Tasks": [
-				{
-					"Type": "winget",
-					"Id": "AgileBits.1Password"
-				},
-				{
-					"Type": "winget",
-					"Id": "Microsoft.PowerToys"
-				},
-				{
-					"Type": "winget",
-					"Id": "Notepad++.Notepad++"
-				},
-				{
-					"Type": "winget",
-					"Id": "PuTTY.PuTTY"
-				},
-				{
-					"Type": "winget",
-					"Id": "vim.vim"
-				},
-				{
-					"Type": "winget",
-					"Id": "7zip.7zip"
-				},
-				{
-					"Type": "winget",
-					"Id": "VMware.WorkstationPro"
-				},
-				{
-					"Type": "winget",
-					"Id": "Figma.Figma"
-				}
-			]
-		},
-		{
-			"StageNumber": 4,
-			"StartMessage": "Other Software",
-			"FinishAction": "continue",
-			"Tasks": [
-				{
-					"Type": "winget",
-					"Id": "Discord.Discord"
-				},
-				{
-					"Type": "winget",
-					"Id": "SlackTechnologies.Slack"
-				},
-				{
-					"Type": "winget",
-					"Id": "Zoom.Zoom"
-				},
-				{
-					"Type": "download",
-					"Text": "Screens Connect",
-					"Url": "https://updates.edovia.com/com.edovia.screens.connect.windows.3x/ScreensConnect_3.5.6.1100_Setup.exe"
-				},
-				{
-					"Type": "winget",
-					"Id": "plex.Plex"
-				},
-				{
-					"Type": "winget",
-					"Id": "RaspberryPiFoundation.RaspberryPiImager"
-				},
-				{
-					"Type": "microsoftStore",
-					"Text": "iTunes",
-					"Id": "9PB2MZ1ZMB1S"
-				},
-				{
-					"Type": "microsoftStore",
-					"Text": "iCloud",
-					"Id": "9PKTQ5699M62"
-				}
-			]
-		},
-		{
-			"StageNumber": 5,
-			"StartMessage": "Games",
-			"FinishAction": "continue",
-			"Tasks": [
-				{
-					"Type": "winget",
-					"Id": "Blizzard.BattleNet"
-				},
-				{
-					"Type": "winget",
-					"Id": "Valve.Steam"
-				},
-				{
-					"Type": "winget",
-					"Id": "GOG.Galaxy"
-				}
-			]
-		},
-		{
-			"StageNumber": 6,
-			"StartMessage": "Surface stuff",
-			"FinishAction": "continue",
-			"Tasks": [
-				{
-					"Type": "microsoftStore",
-					"Text": "Surface",
-					"Id": "9WZDNCRFJB8P"
-				},
-				{
-					"Type": "microsoftStore",
-					"Text": "Microsoft Whiteboard",
-					"Id": "9MSPC6MP8FM4"
-				},
-				{
-					"Type": "microsoftStore",
-					"Text": "Surface Diagnostic Toolkit",
-					"Id": "9NF1MR6C60ZF"
-				},
-				{
-					"Type": "microsoftStore",
-					"Text": "MPEG-2 Video Extension",
-					"Id": "9N95Q1ZZPMH4"
-				},
-				{
-					"Type": "microsoftStore",
-					"Text": "HEVC Video Extensions",
-					"Id": "9NMZLZ57R3T7"
-				},
-				{
-					"Type": "winget",
-					"Id": "Microsoft.MouseandKeyboardCenter"
-				}
-			]
-		},
-		{
-			"StageNumber": 7,
-			"StartMessage": "Installing Ubuntu",
-			"FinishAction": "continue",
-			"Tasks": [
-				{
-					"Type": "exec",
-					"Text": "Setting up Unbuntu",
-					"Executable": "wsl --install --distribution ubuntu"
-				},
-				{
-					"Type": "exec",
-					"Text": "Updating Ubuntu",
-					"Executable": "wsl --exec sudo apt update"
-				},
-				{
-					"Type": "exec",
-					"Text": "Upgrading Ubuntu",
-					"Executable": "wsl --exec sudo apt full-upgrade"
-				}
-			]
-		},
-		{
-			"StageNumber": 8,
-			"StartMessage": "Finally Office...",
-			"FinishAction": "continue",
-			"Tasks": [
-				{
-					"Type": "office",
-					"ConfigurationAttributes": 
-					[
-						{
-							"Attribute": "OfficeClientEdition",
-							"Value": "64"
-						},
-						{
-							"Attribute": "MigrateArch",
-							"Value": "True"
-						},
-						{
-							"Attribute": "OfficeMgmtCOM",
-							"Value": "False"
-						}
-					],
-					"Products": 
-					[
-						{
-							"ProductId": "O365HomePremRetail",
-							"Language":
-							{
-								"LanguageId": "MatchOS",
-								"Attributes":
-								[
-									{
-										"Attribute": "Fallback",
-										"Value": "en-us"
-									}
-								]
-							},
-							"Display":
-							{
-								"Attributes":
-								[
-									{
-										"Attribute": "Level",
-										"Value": "Full"
-									}
-								]
-							},
-							"ExcludeComponents":
-							[
-								"Access",
-								"OneNote",
-								"OneDrive",
-								"Outlook",
-								"Publisher"
-							]
-						},
-						{
-							"ProductId": "VisioPro2021Retail",
-							"Language":
-							{
-								"LanguageId": "MatchOS",
-								"Attributes":
-								[
-									{
-										"Attribute": "Fallback",
-										"Value": "en-us"
-									}
-								]
-							},
-							"Display":
-							{
-								"Attributes":
-								[
-									{
-										"Attribute": "Level",
-										"Value": "Full"
-									}
-								]
-							}
-						},
-						{
-							"ProductId": "ProjectPro2021Retail",
-							"Language":
-							{
-								"LanguageId": "MatchOS",
-								"Attributes":
-								[
-									{
-										"Attribute": "Fallback",
-										"Value": "en-us"
-									}
-								]
-							},
-							"Display":
-							{
-								"Attributes":
-								[
-									{
-										"Attribute": "Level",
-										"Value": "Full"
-									}
-								]
-							}
-						}
-					]
-				}
-			]
-		}
-	]
+  "ComputerName": "Marcus-Surface",
+  "InstallWsl": false,
+  "TaskStages": [
+    {
+      "StageNumber": 1,
+      "StartMessage": "Surface stuff",
+      "FinishAction": "continue",
+      "Tasks": [
+        {
+          "Type": "microsoftStore",
+          "Text": "Surface",
+          "Id": "9WZDNCRFJB8P"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Surace Management Extensions",
+          "Id": "9N95Q1ZZPMH4"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Surface Diagnostic Toolkit",
+          "Id": "9NF1MR6C60ZF"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Microsoft Whiteboard",
+          "Id": "9MSPC6MP8FM4"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "MPEG-2 Video Extension",
+          "Id": "9N95Q1ZZPMH4"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "HEVC Video Extensions",
+          "Id": "9NMZLZ57R3T7"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Intel Graphics Command Centre",
+          "Id": "9PGJGD53TN86"
+        },
+        {
+          "Type": "winget",
+          "Id": "Intel.ProcessorDiagnosticTool"
+        },
+        {
+          "Type": "winget",
+          "Id": "Intel.IntelDriverAndSupportAssistant"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Dolby Access OEM",
+          "Id": "9NXRNTFLMPTF"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Dolby Vision Extensions",
+          "Id": "9PLTG1LWPHLF"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "OpenCL and OpenGL Compatibility pack",
+          "Id": "9NQPSL29BFFF"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "RAW Image Extensions",
+          "Id": "9NCTDW2W1BH8"
+        },
+        {
+          "Type": "winget",
+          "Id": "Microsoft.MouseandKeyboardCenter"
+        },
+        {
+          "Type": "winget",
+          "Id": "DisplayLink.GraphicsDriver"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Ink Draft Font",
+          "Id": "9NPQGC3LCK31"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Ink Journal Font",
+          "Id": "9P3XKPD2DG5G"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Arial Nova Font",
+          "Id": "9NS5CT1MZ7M8"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Convection Font",
+          "Id": "9N1WR5ZSCT3R"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Georgia Pro Font",
+          "Id": "9N9DZG1XT2MB"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Veranda Pro Font",
+          "Id": "9N8D67VHHDC2"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Nina Font",
+          "Id": "9P21845V8Z53"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Gill Sans Nova Font",
+          "Id": "9PK93BG0Z1JJ"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Rockwell Nova Font",
+          "Id": "9N57VDP26CD7"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Microsoft Font Maker",
+          "Id": "9N9209F8S3VCe"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Font",
+          "Id": ""
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "DisplayLink Manager",
+          "Id": "9PLTG1LWPHLF"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "VP9 Video Extensions",
+          "Id": "9PLTG1LWPHLF"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "HEIF Image Extensions",
+          "Id": "9N5TDP8VCMHS"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Webp Image Extensions",
+          "Id": "9PG2DK419DRG"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "MPEG-2 Video Extensions",
+          "Id": "9N95Q1ZZPMH4"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "HEVC Video Extensions",
+          "Id": "9N95Q1ZZPMH4"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Web Media Extensions",
+          "Id": "9N5TDP8VCMHS"
+        }
+      ]
+    },
+    {
+      "StageNumber": 2,
+      "StartMessage": "Installing developemnt tools",
+      "FinishAction": "continue",
+      "FinishMessage": "Completed dev tools",
+      "Tasks": [
+        {
+          "Type": "addWindowsFeature",
+          "Feature": "TelnetClient"
+        },
+        {
+          "Type": "removeWindowsFeature",
+          "Feature": "Internet-Explorer-Optional-amd64"
+        },
+        {
+          "Type": "winget",
+          "Id": "CoreyButler.NVMforWindows"
+        },
+        {
+          "Type": "exec",
+          "Text": "Installing NodeJS LTS using NVM",
+          "Executable": "nvm install lts"
+        },
+        {
+          "Type": "exec",
+          "Text": "Enabling NodeJS LTS",
+          "Executable": "nvm use lts"
+        },
+        {
+          "Type": "winget",
+          "Id": "Python.Python.3.12"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Dev Home (Preview)",
+          "Id": "9N8MHTPHNGVV"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Dev Home GitHub Extension (Pireview)",
+          "Id": "9NZCC27PR6N6"
+        },
+        {
+          "Type": "winget",
+          "Id": "Git.Git"
+        },
+        {
+          "Type": "winget",
+          "Id": "GitHub.GitLFS"
+        },
+        {
+          "Type": "winget",
+          "Id": "Google.Chrome"
+        },
+        {
+          "Type": "winget",
+          "Id": "Mozilla.Firefox.DeveloperEdition"
+        },
+        {
+          "Type": "winget",
+          "Id": "Docker.DockerDesktop"
+        },
+        {
+          "Type": "winget",
+          "Id": "Docker.DockerCompose"
+        },
+        {
+          "Type": "winget",
+          "Id": "Kubernetes.kubectl"
+        },
+        {
+          "Type": "winget",
+          "Id": "Kubernetes.minikube"
+        },
+        {
+          "Type": "winget",
+          "Id": "Kubernetes.kompose"
+        },
+        {
+          "Type": "winget",
+          "Id": "Microsoft.VisualStudio.2019.Enterprise",
+          "AdditionalOptions": [
+            "--override",
+            "--passive --wait --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;includeOptional --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1"
+          ]
+        },
+        {
+          "Type": "winget",
+          "Id": "Microsoft.VisualStudio.2022.Enterprise-Preview",
+          "AdditionalOptions": [
+            "--override",
+            "--passive --wait --norestart --add Microsoft.VisualStudio.Workload.CoreEditor --add Microsoft.VisualStudio.Workload.NetWeb;includeOptional --add Microsoft.VisualStudio.Workload.NativeDesktop --add Microsoft.VisualStudio.Workload.Node --add Microsoft.VisualStudio.Workload.ManagedDesktop;includeOptional --add Microsoft.VisualStudio.Workload.NetCoreTools;includeRecommended --add Microsoft.VisualStudio.Workload.Office;includeOptional --add Microsoft.VisualStudio.Component.LinqToSql --add Microsoft.NetCore.ComponentGroup.DevelopmentTools.2.1 --add Microsoft.NetCore.ComponentGroup.Web.2.1"
+          ]
+        },
+        {
+          "Type": "winget",
+          "Id": "Microsoft.VisualStudioCode"
+        },
+        {
+          "Type": "winget",
+          "Id": "DBBrowserForSQLite.DBBrowserForSQLite"
+        },
+        {
+          "Type": "winget",
+          "Id": "Microsoft.SQLServerManagementStudio"
+        },
+        {
+          "Type": "winget",
+          "Id": "Graphcool.GraphQLPlayground"
+        },
+        {
+          "Type": "winget",
+          "Id": "LINQPad.LINQPad.5"
+        },
+        {
+          "Type": "winget",
+          "Id": "LINQPad.LINQPad.5"
+        },
+        {
+          "Type": "winget",
+          "Id": "LINQPad.LINQPad.7"
+        },
+        {
+          "Type": "winget",
+          "Id": "LINQPad.LINQPad.8"
+        },
+        {
+          "Type": "winget",
+          "Id": "Fork.Fork"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "WinDbg",
+          "Id": "9PGJGD53TN86"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "SysInternals",
+          "Id": "9P7KNL5RWT25"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Performance analyser",
+          "Id": "9P7KNL5RWT25"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Diagnostic Data Viewer",
+          "Id": "9N8WTRRSQ8F7"
+        },
+        {
+          "Type": "download",
+          "Text": "Freedom Scientific Fusion",
+          "Url": "https://fusion2023.vfo.digital/2023.2311.4.400/65D7B7EE-64D5-4660-BA72-FBB17A217B64/F2023.2311.4.400.exe"
+        },
+        {
+          "Type": "download",
+          "Text": "WinToUSB",
+          "Url": "https://www.easyuefi.com/wintousb/downloads/WinToUSB_Free.exe"
+        },
+        {
+          "Type": "winget",
+          "Id": "NVAccess.NVDA"
+        }
+      ]
+    },
+    {
+      "StageNumber": 3,
+      "StartMessage": "Installing utilities",
+      "FinishAction": "continue",
+      "Tasks": [
+        {
+          "Type": "winget",
+          "Id": "AgileBits.1Password"
+        },
+        {
+          "Type": "winget",
+          "Id": "Microsoft.PowerToys"
+        },
+        {
+          "Type": "winget",
+          "Id": "Notepad++.Notepad++"
+        },
+        {
+          "Type": "winget",
+          "Id": "PuTTY.PuTTY"
+        },
+        {
+          "Type": "winget",
+          "Id": "vim.vim"
+        },
+        {
+          "Type": "winget",
+          "Id": "7zip.7zip"
+        },
+        {
+          "Type": "winget",
+          "Id": "VMware.WorkstationPro"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Display CAL",
+          "Id": "FlorianHoech.DisplayCAL"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "PowerShell",
+          "Id": "9MZ1SNWT0N5D"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Windows File Recovery",
+          "Id": "9N26S50LN705"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "Windows File Manager",
+          "Id": "9N95Q1ZZPMH4"
+        }
+      ]
+    },
+    {
+      "StageNumber": 4,
+      "StartMessage": "Other Software",
+      "FinishAction": "continue",
+      "Tasks": [
+        {
+          "Type": "winget",
+          "Id": "Rufus.Rufus"
+        },
+        {
+          "Type": "winget",
+          "Id": "Discord.Discord"
+        },
+        {
+          "Type": "winget",
+          "Id": "SlackTechnologies.Slack"
+        },
+        {
+          "Type": "winget",
+          "Id": "Zoom.Zoom"
+        },
+        {
+          "Type": "download",
+          "Text": "Screens Connect",
+          "Url": "https://updates.edovia.com/com.edovia.screens.connect.windows.3x/ScreensConnect_3.5.6.1100_Setup.exe"
+        },
+        {
+          "Type": "winget",
+          "Id": "plex.Plex"
+        },
+        {
+          "Type": "winget",
+          "Id": "Free-Astro.Siril"
+        },
+        {
+          "Type": "winget",
+          "Id": "RaspberryPiFoundation.RaspberryPiImager"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "iTunes",
+          "Id": "9PB2MZ1ZMB1S"
+        },
+        {
+          "Type": "microsoftStore",
+          "Text": "iCloud",
+          "Id": "9PKTQ5699M62"
+        }
+      ]
+    },
+    {
+      "StageNumber": 5,
+      "StartMessage": "Games",
+      "FinishAction": "continue",
+      "Tasks": [
+        {
+          "Type": "winget",
+          "Id": "Blizzard.BattleNet"
+        },
+        {
+          "Type": "winget",
+          "Id": "Valve.Steam"
+        },
+        {
+          "Type": "winget",
+          "Id": "GOG.Galaxy"
+        }
+      ]
+    },
+    {
+      "StageNumber": 6,
+      "StartMessage": "Installing Ubuntu",
+      "FinishAction": "continue",
+      "Tasks": [
+        {
+          "Type": "exec",
+          "Text": "Setting up Unbuntu",
+          "Executable": "wsl --install --distribution ubuntu"
+        },
+        {
+          "Type": "exec",
+          "Text": "Updating Ubuntu",
+          "Executable": "wsl --exec sudo apt update"
+        },
+        {
+          "Type": "exec",
+          "Text": "Upgrading Ubuntu",
+          "Executable": "wsl --exec sudo apt full-upgrade"
+        }
+      ]
+    },
+    {
+      "StageNumber": 7,
+      "StartMessage": "Finally Office...",
+      "FinishAction": "continue",
+      "Tasks": [
+        {
+          "Type": "office",
+          "ConfigurationAttributes": [
+            {
+              "Attribute": "OfficeClientEdition",
+              "Value": "64"
+            },
+            {
+              "Attribute": "MigrateArch",
+              "Value": "True"
+            },
+            {
+              "Attribute": "OfficeMgmtCOM",
+              "Value": "False"
+            }
+          ],
+          "Products": [
+            {
+              "ProductId": "O365HomePremRetail",
+              "Language": {
+                "LanguageId": "MatchOS",
+                "Attributes": [
+                  {
+                    "Attribute": "Fallback",
+                    "Value": "en-us"
+                  }
+                ]
+              },
+              "Display": {
+                "Attributes": [
+                  {
+                    "Attribute": "Level",
+                    "Value": "Full"
+                  }
+                ]
+              },
+              "ExcludeComponents": [
+                "Access",
+                "OneNote",
+                "OneDrive",
+                "Outlook",
+                "Publisher"
+              ]
+            },
+            {
+              "ProductId": "VisioPro2021Retail",
+              "Language": {
+                "LanguageId": "MatchOS",
+                "Attributes": [
+                  {
+                    "Attribute": "Fallback",
+                    "Value": "en-us"
+                  }
+                ]
+              },
+              "Display": {
+                "Attributes": [
+                  {
+                    "Attribute": "Level",
+                    "Value": "Full"
+                  }
+                ]
+              }
+            },
+            {
+              "ProductId": "ProjectPro2021Retail",
+              "Language": {
+                "LanguageId": "MatchOS",
+                "Attributes": [
+                  {
+                    "Attribute": "Fallback",
+                    "Value": "en-us"
+                  }
+                ]
+              },
+              "Display": {
+                "Attributes": [
+                  {
+                    "Attribute": "Level",
+                    "Value": "Full"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
