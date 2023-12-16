@@ -3,19 +3,6 @@
 	"InstallWsl": true,
 	"TaskStages": [
 		{
-			"StageNumber": 1,
-			"FinishAction": "exit",
-			"FinishMessage": "Please ensure that winget is installed",
-			"StartMessage": "Settingup Winget",
-			"Tasks": [
-				{
-					"Type": "microsoftStore",
-					"Text": "App Installer",
-					"Id": "9NBLGGH4NNS1"
-				}
-			]
-		},
-		{
 			"StageNumber": 2,
 			"StartMessage": "Installing developemnt tools",
 			"FinishAction": "continue",
@@ -56,10 +43,6 @@
 				},
 				{
 					"Type": "winget",
-					"Id": "Git.Git"
-				},
-				{
-					"Type": "winget",
 					"Id": "Microsoft.EdgeWebView2Runtime"
 				},
 				{
@@ -73,7 +56,7 @@
 				},
 				{
 					"Type": "winget",
-					"Id": "Docker.DockerDesktop"
+					"Id": "Microsoft.SQLServerManagementStudio"
 				},
 				{
 					"Type": "winget",
@@ -82,6 +65,10 @@
 				{
 					"Type": "winget",
 					"Id": "LINQPad.LINQPad.6"
+				},
+				{
+					"Type": "winget",
+					"Id": "LINQPad.LINQPad.7"
 				},
 				{
 					"Type": "winget",
@@ -105,11 +92,6 @@
 				{
 					"Type": "winget",
 					"Id": "Microsoft.PowerToys"
-				},
-				{
-					"Type": "microsoftStore",
-					"Text": "Windows Terminal",
-					"Id": "9N0DX20HK701"
 				},
 				{
 					"Type": "winget",
@@ -240,14 +222,19 @@
 			"FinishAction": "continue",
 			"Tasks": [
 				{
-					"Type": "microsoftStore",
-					"Text": "Ubuntu",
-					"Id": "9NBLGGH4MSV6"
+					"Type": "exec",
+					"Text": "Setting up Unbuntu",
+					"Executable": "wsl --install --distribution ubuntu"
 				},
 				{
 					"Type": "exec",
-					"Text": "Setting up Unbuntu",
-					"Executable": "ubuntu"
+					"Text": "Updating Ubuntu",
+					"Executable": "wsl --exec sudo apt update"
+				},
+				{
+					"Type": "exec",
+					"Text": "Upgrading Ubuntu",
+					"Executable": "wsl --exec sudo apt full-upgrade"
 				}
 			]
 		},
@@ -308,7 +295,7 @@
 							]
 						},
 						{
-							"ProductId": "VisioPro2019Retail",
+							"ProductId": "VisioPro2021Retail",
 							"Language":
 							{
 								"LanguageId": "MatchOS",
@@ -332,7 +319,7 @@
 							}
 						},
 						{
-							"ProductId": "ProjectPro2019Retail",
+							"ProductId": "ProjectPro2021Retail",
 							"Language":
 							{
 								"LanguageId": "MatchOS",
